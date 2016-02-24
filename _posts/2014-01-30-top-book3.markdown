@@ -4,7 +4,7 @@ title:  "编程之道 卷三 设计"
 date:   2014-01-30 16:20:00 +0800
 categories: top
 ---
-## Book 3 - Design 设计
+## Book 3 - Design
 
 ***Thus spake the master programmer:**  
 "When the program is being tested, it is too late to make design changes."*
