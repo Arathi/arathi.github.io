@@ -11,7 +11,7 @@ tags: Oracle Linux
 
 ### 二、yum安装源设置
 
-####虚拟机光驱方式  
+#### 2.1 虚拟机光驱方式  
 首先要插入dvd  
 
     mount -t auto /dev/cdrom /mnt/cdrom/
@@ -25,7 +25,7 @@ tags: Oracle Linux
     gpgcheck=0
     gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
 
-####iso文件方式
+#### 2.2 iso文件方式
 (to be write)
 
 ### 三、Oracle运行环境检查、设置与安装
