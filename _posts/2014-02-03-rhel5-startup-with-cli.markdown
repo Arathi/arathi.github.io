@@ -3,6 +3,7 @@ layout: post
 title:  "RHEL 5.4 设置为字符界面启动"
 date:   2014-02-03 17:32:00 +0800
 categories: linux
+tags: Linux
 ---
 
 前一段时间由于公司某项目的需要，安装了一个与生产环境相同的RHEL 5.4，安装以及运行的最大感受，就是RHEL 5看上去要比RHEL 6来得Hacker一些。嗯，RHEL 6已经已经够Hacker了，RHEL 5更加Hacker。

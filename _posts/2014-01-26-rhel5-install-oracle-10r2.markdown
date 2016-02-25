@@ -3,6 +3,7 @@ layout: post
 title:  "虚拟机下RHEL 5.4安装Oracle 10g R2"
 date:   2014-01-26 23:30:00 +0800
 categories: linux
+tags: Oracle Linux
 ---
 ### 一、安装RHEL 5.4
 

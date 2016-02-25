@@ -3,6 +3,7 @@ layout: post
 title:  "编程之道 卷六 管理"
 date:   2014-03-21 21:57:00 +0800
 categories: top
+tags: 编程之道
 ---
 
 ## Book 6 - Management

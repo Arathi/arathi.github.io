@@ -2,7 +2,8 @@
 layout: post
 title:  "CodeIgniter学习笔记"
 date:   2014-07-11 23:35:00 +0800
-categories: top
+categories: PHP
+tags: CodeIgniter PHP
 ---
 
 ## 一. CI介绍
@@ -466,7 +467,7 @@ view的第三个方法可以获取到要加载的视图的内容，以下方法�
 
 #### 4.6.8 私有方法和变量
 
-名字前要加上"_"。
+名字前要加上下划线(_)。
 
 #### 4.6.9 每行一条语句
 

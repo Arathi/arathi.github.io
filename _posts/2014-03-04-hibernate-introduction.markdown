@@ -2,7 +2,8 @@
 layout: post
 title:  "Hibernate入门笔记"
 date:   2014-03-04 11:45:00 +0800
-categories: linux
+categories: java
+tags: Java
 ---
 
 ### 一. 什么是持久化

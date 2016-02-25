@@ -1,19 +1,33 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely need to edit after that.
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'jekyll serve'. If you change this file, please restart the server process.
-
 # Site settings
 title: Arathis'壁垒
 email: ssdfa7@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  咸鱼湾非洲提督，垫底鸟厨，暂时失业的全栈工程师Arathi的博客
-baseurl: "" # the subpath of your site, e.g. /blog
+  Write an awesome description for your new site here. You can edit this
+  line in _config.yml. It will appear in your document head meta (for
+  Google search results) and in your feed.xml site description.
+baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://www.arathi.pw" # the base hostname & protocol for your site
-twitter_username: __Arathi_R
-github_username:  Arathi
+
+# Sidebar filter
+# Choose 'tag' or 'category' as filter in sidebar.
+filter: 'tag'
+
+# Social account
+twitter:  __Arathi_R
+weibo:    arathi
+github:   Arathi
+# codepen:  username
+# dribbble: username
+
+# Comment
+# disqus_shortname: discussion_shortname
+
+# Google Analytics
+# google_analytics: tracking_ID
 
 # Build settings
 markdown: kramdown
+sass:
+  style: compressed
+gems:
+  - jekyll-sitemap
