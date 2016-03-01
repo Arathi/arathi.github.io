@@ -13,6 +13,8 @@ tags: 编程之道
 ***编程大师如是说：**  
 “当你学会了从trap frame中捕获错误编码时，你就可以走了。”*
 
+<!--more-->
+
 ### 1.1 ###
 
 Something mysterious is formed, born in the silent void. Waiting alone and unmoving, it is at once still and yet in constant motion. It is the source of all programs. I do not know its name, so I will call it the Tao of Programming.  

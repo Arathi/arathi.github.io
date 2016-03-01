@@ -17,6 +17,7 @@ tags: Oracle Linux
     mount -t auto /dev/cdrom /mnt/cdrom/
 
 然后添加一个yum源，添加/etc/yum.repos.d/rhel-cdrom.repo
+<!--more-->
 
     [rhel-cdrom]
     name=Red Hat Enterprise Linux $releasever - $basearch - CDROM

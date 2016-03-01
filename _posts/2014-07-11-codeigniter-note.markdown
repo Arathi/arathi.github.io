@@ -12,6 +12,8 @@ tags: CodeIgniter PHP
 
 CI全称CodeIgniter。最早是由Rick Ellis开发（此人现在是EllisLab 公司的CEO）。这个框架的灵感来自RoR，刚开始是为真实应用而编写的，集成了很多类库、辅助函数(helpers)以及从 ExpressionEngine借用的子系统。而目前CI由“ExpressionEngine开发团队”开发并维护。
 
+<!--more-->
+
 ### 1.2 服务器要求
 
 PHP版本要求5.2.4及以上版本。 数据库可以支持MySQL、MySQLi、MS SQL Server、Postgres、Oracle和SQLite，另外也支持ODBC。

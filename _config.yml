@@ -1,33 +1,78 @@
-# Site settings
-title: Arathis'壁垒
-email: ssdfa7@gmail.com
-description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://www.arathi.pw" # the base hostname & protocol for your site
+# Site wide configuration
 
-# Sidebar filter
-# Choose 'tag' or 'category' as filter in sidebar.
-filter: 'tag'
+title:            Arathis'壁垒
+locale:           zh_CN
+url:
 
-# Social account
-twitter:  __Arathi_R
-weibo:    arathi
-github:   Arathi
-# codepen:  username
-# dribbble: username
 
-# Comment
-# disqus_shortname: discussion_shortname
+# Jekyll configuration
 
-# Google Analytics
-# google_analytics: tracking_ID
-
-# Build settings
-markdown: kramdown
+permalink:   /:categories/:title/
+markdown:    kramdown
+highlighter: rouge
 sass:
+  sass_dir: _sass
   style: compressed
 gems:
   - jekyll-sitemap
+  - jekyll-gist
+
+kramdown:
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  enable_coderay: false
+
+
+# Octopress
+
+# Default extensions
+post_ext: md
+page_ext: md
+
+# Found in _templates/
+post_layout: post
+page_layout: page
+
+# Format titles with titlecase?
+titlecase: true
+
+# Site owner
+owner:
+  name: Arathi
+  avatar: ssdfa7_gmail_com.jpg
+  bio: "修炼中的全栈工程师"
+  email: ssdfa7@gmail.com
+  disqus-shortname:
+  twitter: __Arathi_R
+  facebook: #username
+  google:
+    plus: #username
+    analytics:
+    verify:
+    ad-client:
+    ad-slot:
+  bing-verify:
+  github: Arathi
+  stackoverflow: #123456/username   from a "http://stackoverflow.com/users/123456/username" link
+  linkedin: #username
+  xing: #username
+  instagram: #username
+  lastfm: #username
+  tumblr: #username
+  pinterest: #username
+  foursquare: #username
+  steam: larathi
+  dribbble: #username
+  youtube: #username
+  soundcloud: #username
+  weibo: arathi
+  flickr: #username
+  codepen: #username
+
+include: [".htaccess"]
+exclude: ["lib", "config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules", "Gemfile", "Gemfile.lock", "LICENSE", "README.md"]
+
+#common
+excerpt_separator: <!--more-->

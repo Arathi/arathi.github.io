@@ -19,6 +19,8 @@ tags: Oracle Linux
 
 ### 2.2 修改root用户的profile，自动挂载安装盘
 
+<!--more-->
+
 在`/root/.bash_profile`添加以下内容
 
     if [ ! -d "/mnt/rheliso/Packages"]; then
@@ -182,7 +184,7 @@ oracle用户的环境变量设置如下：
 
 ## 十一. 启动服务
 
-###11.1 启动监听
+### 11.1 启动监听
 
     lsnrctl start 
 

@@ -14,6 +14,8 @@ tags: 编程之道
 ***编程大师如是说：**  
 “写得好的程序是它自己的天堂；写的糟的程序是自己的地狱。”*
 
+<!--more-->
+
 ### 4.1
 A program should be light and agile, its subroutines connected like a string of pearls. The spirit and intent of the program should be retained throughout. There should be neither too little or too much, neither needless loops nor useless variables, neither lack of structure nor overwhelming rigidity.  
 一个程序应当轻便而敏捷，它的子程序犹如串在一条线上的珍珠。程序的意图应当始终如一。程序的规模不应过短，也不宜过长；不该有不必要的循环，也不需要多余的变量；不应缺少结构化，也不能过于僵硬。

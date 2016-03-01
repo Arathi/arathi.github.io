@@ -13,6 +13,8 @@ tags: 编程之道
 ***编程大师如是说：**  
 “当程序开始测试后，再去改变设计就太晚了。”*
 
+<!--more-->
+
 ### 3.1
 
 There once was a man who went to a computer trade show. Each day as he entered, the man told the guard at the door: "I am a great thief, renowned for my feats of shoplifting. Be forewarned, for this trade show shall not escape unplundered."  

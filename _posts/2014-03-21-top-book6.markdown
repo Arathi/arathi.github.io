@@ -14,6 +14,8 @@ tags: 编程之道
 ***编程大师如是说：**  
 “增加程序员，减少经理——那样他们的效率就都能得以提高。”*
 
+<!--more-->
+
 ### 6.1
 
 When managers hold endless meetings, the programmers write games. When accountants talk of quarterly profits, the development budget is about to be cut. When senior scientists talk blue sky, the clouds are about to roll in.  

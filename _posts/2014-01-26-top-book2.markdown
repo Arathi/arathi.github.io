@@ -13,6 +13,8 @@ tags: 编程之道
 ***编程大师如是说：**  
 “三日不编程，生命无真义。”*
 
+<!--more-->
+
 ### 2.1
 
 The programmers of old were mysterious and profound. We cannot fathom their thoughts, so all we do isdescribe their appearance.  
