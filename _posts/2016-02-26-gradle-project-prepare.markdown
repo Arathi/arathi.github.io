@@ -2,7 +2,7 @@
 layout: post
 title:  "创建一个Gradle项目后要做的事情"
 date:   2016-02-26 15:52:00 +0800
-modified: 2016-03-01 15:59:00 +0800
+modified: 2016-04-10 12:09:00 +0800
 categories: java
 tags: Java
 ---
@@ -35,7 +35,7 @@ Linux:
 
 {% highlight groovy %}
 sourceCompatibility = 1.7
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 {% endhighlight %}
 
 ## 3. 添加Maven仓库
@@ -45,6 +45,7 @@ sourceCompatibility = 1.7
 {% highlight groovy %}
 repositories {
     maven{ url 'http://maven.oschina.net/content/groups/public/'}
+    jcenter()
     mavenCentral()
 }
 {% endhighlight %}
