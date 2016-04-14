@@ -42,6 +42,7 @@
         <h2><a href="{{ site.url }}{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></h2>
         <p>{{ post.excerpt | strip_html }}</p>
         <a href="{{ site.url }}{{ post.url }}" title="{{ post.title }}">阅读全文…</a>
+        <div align='right'>Posted @ {{ post.date | date: "%F %R" }} by Arathi</div>
       {% endif %}
     </article>
     <hr/>
