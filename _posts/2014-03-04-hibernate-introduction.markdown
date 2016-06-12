@@ -60,20 +60,22 @@ Hibernate是低侵入式设计，也就是说Hibernate所操作的对象不需�
 
 以下是一个简单的插入一条数据的例子：
 
-    //假设已经存在User.hbm.xml并配置好了映射关系
-    public static void main(String[] args) throws Exception{
-        Configuration conf = new Configuration().configure();
-        SessionFactory sf = conf.buildSessionFactory();
-        Session sess = sf.openSession();
-        Transaction tx = sess.beginTransaction();
-        User u = new User();
-        u.setId(1);
-        u.setName("Arathi");
-        sess.save(u);
-        tx.commit();
-        sess.close();
-        sf.close();
-    }
+```java
+//假设已经存在User.hbm.xml并配置好了映射关系
+public static void main(String[] args) throws Exception{
+    Configuration conf = new Configuration().configure();
+    SessionFactory sf = conf.buildSessionFactory();
+    Session sess = sf.openSession();
+    Transaction tx = sess.beginTransaction();
+    User u = new User();
+    u.setId(1);
+    u.setName("Arathi");
+    sess.save(u);
+    tx.commit();
+    sess.close();
+    sf.close();
+}
+```
 
 #### 注意：  
 Configuration在创建时默认载入的是hibernate.cfg.xml这个文件，也可以指定其他路径，甚至可以在程序中硬编码配置信息。  

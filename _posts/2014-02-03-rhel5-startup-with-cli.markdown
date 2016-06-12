@@ -16,16 +16,18 @@ tags: Linux
 
 首先，这些配置应该放在/etc/inittab这个配置文件下，打印一下这个文件，可以看到如下内容：
 
-    # Default runlevel. The runlevels used by RHS are:
-    #   0 - halt (Do NOT set initdefault to this)
-    #   1 - Single user mode
-    #   2 - Multiuser, without NFS (The same as 3, if you do not have networking)
-    #   3 - Full multiuser mode
-    #   4 - unused
-    #   5 - X11
-    #   6 - reboot (Do NOT set initdefault to this)
-    #
-    id:5:initdefault:
+```ini
+# Default runlevel. The runlevels used by RHS are:
+#   0 - halt (Do NOT set initdefault to this)
+#   1 - Single user mode
+#   2 - Multiuser, without NFS (The same as 3, if you do not have networking)
+#   3 - Full multiuser mode
+#   4 - unused
+#   5 - X11
+#   6 - reboot (Do NOT set initdefault to this)
+#
+id:5:initdefault:
+```
 
 "id:"和":initdefault:"之间的数字就说明初始化时使用哪个runlevel，总共有7个runlevel：
 

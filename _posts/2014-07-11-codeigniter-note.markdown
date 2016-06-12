@@ -175,7 +175,9 @@ view方法应该实现的，是检查物理视图是否存在，然后使用load
 
 根据数据库中指定的表建立对应的模型，建立在`application/models`目录下。模型要继承`CI_Model`类，在模型类的构造方法中，要连接数据库：
 
-    $this->load->database();
+```php
+$this->load->database();
+```
 
 这样，就可以在模型类中使用`$this->db`访问数据库了。 模型中应该实现对数据的增删改查操作。
 
@@ -207,11 +209,13 @@ view方法应该实现的，是检查物理视图是否存在，然后使用load
 
 而index.php这一节是可以去掉的，服务器是Apache的话就修改.htaccess，加上这样的一段：
 
-    RewriteEngine on
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond $1 !^(index\.php|images|robots\.txt)
-    RewriteRule ^(.*)$ /index.php/$1 [L]
+```apache
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond $1 !^(index\.php|images|robots\.txt)
+RewriteRule ^(.*)$ /index.php/$1 [L]
+```
 
 注意：如果项目不在根目录，最后一句要稍微修改：
 
@@ -251,13 +255,17 @@ param后面可以加上.html之类的（伪装成静态页面甚至是asp、jsp�
 
 method/后面的，就属于method方法的参数。调用的方法就是：
 
-    Ctrller::method($p1, $p2, $p3, $p4)
+```php
+Ctrller::method($p1, $p2, $p3, $p4)
+```
 
 #### 4.2.4 在路由中设置默认控制器
 
 如果我们只访问`domain.name/index.php`，甚至是`domain.name`，不加控制器名称，CI框架就会从路由中寻找默认路由。假设`application/config/routes.php`中设置了
 
-    $route['default_controller'] = 'Ctrller';
+```php
+$route['default_controller'] = 'Ctrller';
+```
 
 那么就相当于访问`domain.name/index.php/ctrller`
 
@@ -266,15 +274,17 @@ method/后面的，就属于method方法的参数。调用的方法就是：
 之前都是在说默认的调用函数的规则，假设我们希望访问`domain.name/index.php/ctrller/method`
 时不去调用method，而是其他方法，原先的就做不到了，因为不符合规则。其实可以使用remap方法重新定义这些规则，一下是一个remap示例：
 
-    public function _remap($method, $params = array())
+```php
+public function _remap($method, $params = array())
+{
+    $method = 'process_'.$method;
+    if (method_exists($this, $method))
     {
-        $method = 'process_'.$method;
-        if (method_exists($this, $method))
-        {
-            return call_user_func_array(array($this, $method), $params);
-        }
-        show_404();
+        return call_user_func_array(array($this, $method), $params);
     }
+    show_404();
+}
+```
 
 上面重定义的规则，就是说希望调用对应的以process开头的那些函数，比如传入的方法段是"method"，就去调用processmethod方法，没有的话就404。
 
@@ -302,15 +312,19 @@ method/后面的，就属于method方法的参数。调用的方法就是：
 
 只要在逻辑视图的实现中加上
 
-    $this->load->view('name');
+```php
+$this->load->view('name');
+```
 
 就说明加载一个名为name的视图，而这个物理视图对应的文件，就是`application/views/name.php`。
 
 视图可以加载多个，按顺序输出：
 
-    $this->load->view('header');
-    $this->load->view('content');
-    $this->load->view('footer');
+```php
+$this->load->view('header');
+$this->load->view('content');
+$this->load->view('footer');
+```
 
 这样就先后加载了页头、内容和页尾。
 
@@ -320,28 +334,36 @@ method/后面的，就属于method方法的参数。调用的方法就是：
 `application/views/templates/header.php`
 加载时语句如下：
 
-    $this->load->view('templates/header');
+```php
+$this->load->view('templates/header');
+```
 
 #### 4.3.4 添加动态数据
 
 加载视图的方法有三个参数，原型大概如下：
 
-    mixed CI_Controller::load::view(
-        string $viewname,
-        array $data = array(),
-        bool $output = false
-    );
+```php
+mixed CI_Controller::load::view(
+    string $viewname,
+    array $data = array(),
+    bool $output = false
+);
+```
 
 这里说的是第二个参数。比如要在公共网页头部中使用不同的标题(title)和编码(encoding)，就要传入两个以上参数，使用一个数组就搞定了：
 
-    $data = array(
-        'title'=$title, 
-        'encoding'=$encoding
-    );
+```php
+$data = array(
+    'title'=$title, 
+    'encoding'=$encoding
+);
+```
 
 然后要在加载视图时把参数传入到视图：
 
-    $this->load->view('templates/header', $data);
+```php
+$this->load->view('templates/header', $data);
+```
 
 需要注意，视图中留给显示动态内容的坑，留的不是`$data['title']`之类的，应该是直接用`$title`。
 
@@ -350,21 +372,27 @@ method/后面的，就属于method方法的参数。调用的方法就是：
 模板语言其实就是简单的php替代语法：  
 简单的案例如下，$list代表一个集合，简单来说就是数组，$item是当前循环中用到的集合成员：
 
-    <?php foreach ($list as $item):?>
+```php
+<?php foreach ($list as $item):?>
+```
 
 重复输出内容的HTML形式：
 
-    <?php endforeach;?>
+```php
+<?php endforeach;?>
+```
 
 #### 4.3.6 获取视图内容
 
 view的第三个方法可以获取到要加载的视图的内容，以下方法加载myfile视图，并把内容返回到`$output`：
 
-    $output = $this->load->view(
-        'myfile', 
-        array(), 
-        true
-    );
+```php
+$output = $this->load->view(
+    'myfile', 
+    array(), 
+    true
+);
+```
 
 如果第三个参数为false，那么只返回视图加载结果，不返回内容。
 
@@ -376,15 +404,21 @@ view的第三个方法可以获取到要加载的视图的内容，以下方法�
 
 一般会在控制器的构造器重加载模型，例如有个`application/models/modelname.php`中定义了叫作Modelname模型类，应该这样加载：
 
-    $this->load->model('model_name');
+```php
+$this->load->model('model_name');
+```
 
 如果这个模型放在forumdao目录下，那么就加上目录名：
 
-    $this->load->model('forumdao/model_name');
+```php
+$this->load->model('forumdao/model_name');
+```
 
 加载完成后，就可以通过
 
-    $this->model_name->method()
+```php
+$this->model_name->method()
+```
 
 调用模型的方法。
 
@@ -404,29 +438,35 @@ view的第三个方法可以获取到要加载的视图的内容，以下方法�
 
 该函数的原型：
 
-    show_error(
-        string $msg, //错误消息
-        int $status_code = 500, //状态码
-        string $heading = 'An Error Was Encountered' //标题
-    );
+```php
+show_error(
+    string $msg, //错误消息
+    int $status_code = 500, //状态码
+    string $heading = 'An Error Was Encountered' //标题
+);
+```
 
 #### 4.5.2 show_404
 
 该函数的原型：
 
-    show_404(
-        string $page, //错误页面
-        string $log_error //级别
-    );
+```php
+show_404(
+    string $page, //错误页面
+    string $log_error //级别
+);
+```
 
 #### 4.5.3 log_message
 
 该函数的原型：
 
-    log_message(
-        string $level, //级别
-        string $msg //输出消息
-    );
+```php
+log_message(
+    string $level, //级别
+    string $msg //输出消息
+);
+```
 
 日志有三个级别：debug、info、error
 
@@ -440,8 +480,10 @@ view的第三个方法可以获取到要加载的视图的内容，以下方法�
 
 文件结束时忽略所有?>，但是要添加如下格式的文件结束注释：
 
-    /* End of file 文件名 */
-    /* Location: ./文件路径 */
+```php
+/* End of file 文件名 */
+/* Location: ./文件路径 */
+```
 
 #### 4.6.3 类、方法、函数、变量的命名规范
 

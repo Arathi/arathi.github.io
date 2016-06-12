@@ -19,12 +19,14 @@ tags: Oracle Linux
 然后添加一个yum源，添加/etc/yum.repos.d/rhel-cdrom.repo
 <!--more-->
 
-    [rhel-cdrom]
-    name=Red Hat Enterprise Linux $releasever - $basearch - CDROM
-    baseurl=file:///mnt/cdrom/Server/
-    enabled=1
-    gpgcheck=0
-    gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+```ini
+[rhel-cdrom]
+name=Red Hat Enterprise Linux $releasever - $basearch - CDROM
+baseurl=file:///mnt/cdrom/Server/
+enabled=1
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+```
 
 #### 2.2 iso文件方式
 (to be write)
@@ -46,26 +48,30 @@ uname -n的输出、hostname的输出以及hosts中内网ip对应的名称要一
 (2) 新增用户 oracle，设定其用户组为oinstall和dba  
 (3) 为oracle用户设置密码  
 
-    groupadd oinstall
-    groupadd dba
-    useradd -g oinstall -G dba oracle
-    passwd oracle
-    #然后为该用户输入密码
-    usermod -g oinstall -G dba oracle
-    ls -l /home | grep oracle
+```bash
+groupadd oinstall
+groupadd dba
+useradd -g oinstall -G dba oracle
+passwd oracle
+#然后为该用户输入密码
+usermod -g oinstall -G dba oracle
+ls -l /home | grep oracle
+```
 
 ### 五、修改内核参数
 
 修改 /etc/sysctl.conf 文件，在文件尾部添加以下内容：
 
-    fs.file-max = 65536
-    kernel.sem = 250 32000 100 128
-    kernel.shmmni = 4096
-    net.core.rmem_default = 4194304
-    net.core.rmem_max = 4194304
-    net.core.wmem_default = 262144
-    net.core.wmem_max = 262144
-    net.ipv4.ip_local_port_range = 1024 65500
+```bash
+fs.file-max = 65536
+kernel.sem = 250 32000 100 128
+kernel.shmmni = 4096
+net.core.rmem_default = 4194304
+net.core.rmem_max = 4194304
+net.core.wmem_default = 262144
+net.core.wmem_max = 262144
+net.ipv4.ip_local_port_range = 1024 65500
+```
 
 修改完执行 sysctl -p，使刚才的设置生效
 
@@ -73,50 +79,62 @@ uname -n的输出、hostname的输出以及hosts中内网ip对应的名称要一
 
 (1) 修改 /etc/security/limits.conf 文件，在文件尾部添加以下内容：
 
-    oracle soft nproc 2047
-    oracle hard nproc 16384
-    oracle soft nofile 1024
-    oracle hard nofile 65536
+```bash
+oracle soft nproc 2047
+oracle hard nproc 16384
+oracle soft nofile 1024
+oracle hard nofile 65536
+```
 
 (2) 编辑 /etc/pam.d/login 文件，添加一行：
 
-    session required pam_limits.so
+```bash
+session required pam_limits.so
+```
 
 (3) 修改环境变量配置  
 修改系统环境变量配置文件（/etc/profile），添加以下内容：
 
-    #ksh和其他shell的限制设置
-    if [ $USER = "oracle" ]; then
-        if [ $SHELL = "/bin/ksh" ]; then
-            ulimit -p 16384
-            ulimit -n 65536
-        else
-            ulimit -u 16384 -n 65536
-        fi
+```ksh
+#ksh和其他shell的限制设置
+if [ $USER = "oracle" ]; then
+    if [ $SHELL = "/bin/ksh" ]; then
+        ulimit -p 16384
+        ulimit -n 65536
+    else
+        ulimit -u 16384 -n 65536
     fi
+fi
+```
 
 在 /etc/csh.login 修改csh的限制：
 
-    if ( $USER == "oracle" ) then
-        limit maxproc 16384
-        limit descriptors 65536
-    endif
+```csh
+if ( $USER == "oracle" ) then
+    limit maxproc 16384
+    limit descriptors 65536
+endif
+```
 
 ### 七、建立Oracle安装目录
 
 以下假设Oracle安装在 /home/app/oracle 目录下
 
-    mkdir -p /home/app/oracle
-    chown -R oracle:oinstall /home/app/oracle
-    chmod -R 775 /home/app/oracle
+```bash
+mkdir -p /home/app/oracle
+chown -R oracle:oinstall /home/app/oracle
+chmod -R 775 /home/app/oracle
+```
 
 然后为刚才建立的目录设置环境变量：  
 编辑oracle用户的.bash_profile文件，添加以下内容：
 
-    export ORACLE_BASE=/home/app/oracle
-    export ORACLE_HOME=/home/app/oracle/product/10201
-    export ORACLE_SID=ywxx
-    export PATH=$PATH:$HOME/bin:$ORACLE_HOME/bin
+```bash
+export ORACLE_BASE=/home/app/oracle
+export ORACLE_HOME=/home/app/oracle/product/10201
+export ORACLE_SID=ywxx
+export PATH=$PATH:$HOME/bin:$ORACLE_HOME/bin
+```
 
 然后使用source .bash_profile命令，使环境变量生效
 
@@ -127,7 +145,9 @@ uname -n的输出、hostname的输出以及hosts中内网ip对应的名称要一
 假设现将安装包(10201_database_linux_x86_64.cpio)上传到/home/oracle/setup/10201_database_linux_x86_64.cpio下。
 解压安装包：
 
-    cpio -idmv < 10201_database_linux_x86_64.cpio
+```bash
+cpio -idmv < 10201_database_linux_x86_64.cpio
+```
 
 然后可以准备安装了。
 

@@ -15,7 +15,9 @@ tags: Oracle Linux
 
 ### 2.1 新建挂载目录
 
-    mkdir -p /mnt/rheliso
+```bash
+mkdir -p /mnt/rheliso
+```
 
 ### 2.2 修改root用户的profile，自动挂载安装盘
 
@@ -23,33 +25,41 @@ tags: Oracle Linux
 
 在`/root/.bash_profile`添加以下内容
 
-    if [ ! -d "/mnt/rheliso/Packages"]; then
-        mount /dev/cdrom /mnt/rheliso/
-    fi
+```bash
+if [ ! -d "/mnt/rheliso/Packages"]; then
+    mount /dev/cdrom /mnt/rheliso/
+fi
+```
 
 ### 2.3 清空与重建yum缓存
 
-    yum clean all
-    yum list
+```bash
+yum clean all
+yum list
+```
 
 ## 三. 检查环境
 
 ### 3.1 主机名一致
 
-    uname -n
-    hostname
-    hosts
+```bash
+uname -n
+hostname
+hosts
+```
 
 ### 3.2 安装必要的软件包
 
 执行如下命令：
 
-    yum -y install binutils compat-db compat-gcc-34 compat-gcc-34-c++ \
+```bash
+yum -y install binutils compat-db compat-gcc-34 compat-gcc-34-c++ \
     compat-libstdc++-33 compat-libstdc++ gcc gcc-c++ glibc glibc-common \
     glibc-devel glibc-headers libgcc libXp libXt libXtst libaio \
     libaio-devel libstdc++ libstdc++-devel libgomp make numactl-devel \
     sysstat glibc.i686 glibc-devel.i686 libXp.i686 libXt.i686 \
     libXtst.i686 libgcc.i686
+```
 
 ## 四. 添加oracle用户
 
@@ -61,13 +71,15 @@ tags: Oracle Linux
 
 以上步骤命令如下：
 
-    groupadd oinstall
-    groupadd dba
-    useradd -g oinstall -G dba oracle
-    passwd oracle
-    #然后为输入密码
-    usermod -g oinstall -G dba oracle
-    ls -l /home | grep oracle
+```bash
+groupadd oinstall
+groupadd dba
+useradd -g oinstall -G dba oracle
+passwd oracle
+#然后为输入密码
+usermod -g oinstall -G dba oracle
+ls -l /home | grep oracle
+```
 
 ## 五. 内核参数与shell配置
 
@@ -75,14 +87,16 @@ tags: Oracle Linux
 
 修改`/etc/sysctl.conf`文件，在文件尾部添加以下内容：
 
-    fs.file-max = 65536
-    kernel.sem = 250 32000 100 128
-    kernel.shmmni = 4096
-    net.core.rmem_default = 4194304
-    net.core.rmem_max = 4194304
-    net.core.wmem_default = 262144
-    net.core.wmem_max = 262144
-    net.ipv4.ip_local_port_range = 1024 65500
+```ini
+fs.file-max = 65536
+kernel.sem = 250 32000 100 128
+kernel.shmmni = 4096
+net.core.rmem_default = 4194304
+net.core.rmem_max = 4194304
+net.core.wmem_default = 262144
+net.core.wmem_max = 262144
+net.ipv4.ip_local_port_range = 1024 65500
+```
 
 修改完执行`sysctl -p`，使刚才的设置生效
 
@@ -90,38 +104,46 @@ tags: Oracle Linux
 
 修改`/etc/security/limits.conf`文件，在文件尾部添加以下内容：
 
-    oracle    soft    nproc    2047
-    oracle    hard    nproc    16384
-    oracle    soft    nofile   1024
-    oracle    hard    nofile   65536
+```
+oracle    soft    nproc    2047
+oracle    hard    nproc    16384
+oracle    soft    nofile   1024
+oracle    hard    nofile   65536
+```
 
 ### 5.3 session相关
 
 编辑`/etc/pam.d/login`文件，添加一行：
 
-    session    required     pam_limits.so 
+```
+session    required     pam_limits.so 
+```
 
 ### 5.4 ksh与其他shell的limit修改
 
 修改`/etc/profile`文件，末尾添加：
 
-    if [ $USER = "oracle" ]; then
-        if [ $SHELL = "/bin/ksh" ]; then
-            ulimit -p 16384
-            ulimit -n 65536
-        else
-            ulimit -u 16384 -n 65536
-        fi
+```bash
+if [ $USER = "oracle" ]; then
+    if [ $SHELL = "/bin/ksh" ]; then
+        ulimit -p 16384
+        ulimit -n 65536
+    else
+        ulimit -u 16384 -n 65536
     fi
+fi
+```
 
 ### 5.5 csh的limit修改
 
 在`/etc/csh.login`末尾添加：
 
-    if ( $USER == "oracle" ) then
-        limit maxproc 16384
-        limit descriptors 65536
-    endif
+```csh
+if ( $USER == "oracle" ) then
+    limit maxproc 16384
+    limit descriptors 65536
+endif
+```
 
 ## 六. Oracle安装准备
 
@@ -129,39 +151,49 @@ tags: Oracle Linux
 
 ### 6.1 创建目标目录
 
-    mkdir -p /app/oracle
-    chown -R oracle:oinstall /app/oracle
-    chmod -R 775 /app/oracle
+```bash
+mkdir -p /app/oracle
+chown -R oracle:oinstall /app/oracle
+chmod -R 775 /app/oracle
+```
 
 ### 6.2 配置环境变量
 
 oracle用户的环境变量设置如下：
 
-    export ORACLE_BASE=/app/oracle
-    export ORACLE_HOME=$ORACLE_BASE/product/10201
-    export ORACLE_SID=ywxx
-    export PATH=$PATH:$HOME/bin:$ORACLE_HOME/bin
+```bash
+export ORACLE_BASE=/app/oracle
+export ORACLE_HOME=$ORACLE_BASE/product/10201
+export ORACLE_SID=ywxx
+export PATH=$PATH:$HOME/bin:$ORACLE_HOME/bin
+```
 
 ### 6.3 上传并解压安装文件
 
-    mkdir /home/oracle/setup
-    #上传10201_database_linux_x86_64.cpio.gz上传到/home/oracle/setup
-    #解压gz，然后再解压cpio
-    gunzip 10201_database_linux_x86_64.cpio.gz
-    cpio -idmv < 10201_database_linux_x86_64.cpio
+```bash
+mkdir /home/oracle/setup
+#上传10201_database_linux_x86_64.cpio.gz上传到/home/oracle/setup
+#解压gz，然后再解压cpio
+gunzip 10201_database_linux_x86_64.cpio.gz
+cpio -idmv < 10201_database_linux_x86_64.cpio
+```
 
 ## 七. 配置vnc
 
 ### 7.1 安装VNC服务端
 
-    yum install -y tigervnc-server
+```bash
+yum install -y tigervnc-server
+```
 
 ### 7.2 修改VNCServer的配置文件
 
 在`/etc/sysconfig/vncservers`中添加以下内容：
 
-    VNCSERVERS="1:oracle"
-    VNCSERVERARGS[1]="-geometry 800x600"
+```ini
+VNCSERVERS="1:oracle"
+VNCSERVERARGS[1]="-geometry 800x600"
+```
 
 表示Oracle用户的分辨率为800*600
 
@@ -186,13 +218,19 @@ oracle用户的环境变量设置如下：
 
 ### 11.1 启动监听
 
-    lsnrctl start 
+```
+lsnrctl start 
+```
 
 ### 11.2 启动服务
 
-    sqlplus / as sysdba
-    > startup;
+```
+sqlplus / as sysdba
+> startup;
+```
 
 ### 11.3 停止服务
 
-    > shutdown immediate;
+```
+> shutdown immediate;
+```

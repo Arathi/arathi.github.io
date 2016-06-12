@@ -33,19 +33,19 @@ Linux:
 自动生成的build.gradle的Java编译版本是1.5，文件编码是GBK。  
 如果要修改成其他的，在build.gradle中添加：  
 
-{% highlight groovy %}
+```groovy
 sourceCompatibility = 1.7
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-{% endhighlight %}
+```
 
 ## 3. 添加Maven仓库
 为了加快编译时下载包的速度，应该添加maven镜像，例如oschina的maven镜像。  
 在build.gradle中找到repositories，替换：  
 
-{% highlight groovy %}
+```groovy
 repositories {
     maven{ url 'http://maven.oschina.net/content/groups/public/'}
     jcenter()
     mavenCentral()
 }
-{% endhighlight %}
+```
