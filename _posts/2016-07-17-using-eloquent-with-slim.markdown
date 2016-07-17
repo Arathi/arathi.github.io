@@ -7,6 +7,7 @@ tags: [Slim,Eloquent]
 ---
 
 你可以在Slim应用程序中使用诸如[Eloquent](https://laravel.com/docs/5.1/eloquent)这种对象-关系映射（ORM）库，来访问数据库。
+<!--more-->
 
 ## 将Eloquent添加到你的应用程序
 
