@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 在Slim中使用Eloquent
+title: "在Slim中使用Eloquent"
 date:   2016-07-17 08:30:00 +0800
 categories: php
 tags: [Slim,Eloquent]
