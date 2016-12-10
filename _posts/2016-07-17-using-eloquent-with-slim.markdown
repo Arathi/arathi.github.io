@@ -1,9 +1,9 @@
 ---
 layout: post
-title: 在Slim中使用Eloquent
+title: "在Slim中使用Eloquent"
 date:   2016-07-17 08:30:00 +0800
 categories: php
-tags: [Slim,Eloquent]
+tags: eloquent
 ---
 
 你可以在Slim应用程序中使用诸如[Eloquent](https://laravel.com/docs/5.1/eloquent)这种对象-关系映射（ORM）库，来访问数据库。
