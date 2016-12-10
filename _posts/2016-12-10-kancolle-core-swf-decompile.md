@@ -87,7 +87,7 @@ private function _handleLoadComplete(param1:Event) : void
 ```
 进入到`_handleLoadComplete()`以后，跟`_handleAddToStage()`类似的，先删掉了自身的事件监听。
 
-然后调用了`_createKey()`函数，生成key，目前不妨猜测是揭秘文件用的key。
+然后调用了`_createKey()`函数，生成key，目前不妨猜测是解密文件用的key。
 
 接着又创建了一个`complete`事件的监听，回调函数为`_handleLoadComplete2()`。
 
@@ -136,7 +136,7 @@ private function ___(param1:ByteArray, param2:ByteArray, param3:Object) : void
     param2[param3[param3]](param1,param3[param3[/__/[param3[_loc4_]]]](param3[/./([][{}])],param3[param3[/../(""[param3[_loc4_]])]](param3[/ ./("."[param3[_loc4_]][param3[_loc4_]])],param3[~_loc4_])),param3[/ ./({}[param3[_loc4_]][param3[_loc4_]])]);
 }
 ```
-不管你看了上面的代码有什么感受，反正我是“What the fuck”。经过混淆以后这段代码恶心的一逼，`param3`是之前认为是key，却出现了很多对`param3`的操作，还是先看看`_createKey()`的逻辑吧：
+不管你们看了上面的代码有什么感受，反正我是“What the fuck”。经过混淆以后这段代码恶心的一逼，`param3`是之前认为是key，却出现了很多对`param3`的操作，还是先看看`_createKey()`的逻辑吧：
 
 ```javascript
 private function _createKey() : Object
