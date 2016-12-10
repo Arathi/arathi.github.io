@@ -12,7 +12,7 @@ tags: ActionScript
 
 首先用[FFDec](https://www.free-decompiler.com/flash/download/)（JPEXS Free Flash Decompiler，之前汉化一个叫《遗迹岛》的AIR游戏，因为没钱买硕思，所以找到这个开源货，想不到还挺好用的）打开mainD2.swf。里面有个mainD2类，明显就是整个程序的入口。
 
-<!-- more -->
+<!--more-->
 
 ```javascript
 public function mainD2()
