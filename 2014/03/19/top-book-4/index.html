@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Book 4 - CodingThus spake the master programmer:“A well-written program is its own heaven; a poorly-written program is its own hell.” 编程大师如是说：“写得好的程序是它自己的天堂；写的糟的程序是自己的地狱。”">
+<meta name="keywords" content="编程之道">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编程之道 卷四 编码">
+<meta property="og:url" content="http://blog.undsf.com/2014/03/19/top-book-4/index.html">
+<meta property="og:site_name" content="Nebnizilla Citadel">
+<meta property="og:description" content="Book 4 - CodingThus spake the master programmer:“A well-written program is its own heaven; a poorly-written program is its own hell.” 编程大师如是说：“写得好的程序是它自己的天堂；写的糟的程序是自己的地狱。”">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-09T17:03:25.871Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编程之道 卷四 编码">
+<meta name="twitter:description" content="Book 4 - CodingThus spake the master programmer:“A well-written program is its own heaven; a poorly-written program is its own hell.” 编程大师如是说：“写得好的程序是它自己的天堂；写的糟的程序是自己的地狱。”">
+  <link rel="canonical" href="http://blog.undsf.com/2014/03/19/top-book-4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>编程之道 卷四 编码 | Nebnizilla Citadel</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Nebnizilla Citadel</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">奈伯尼吉拉城塞</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://blog.undsf.com/2014/03/19/top-book-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Arathi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nebnizilla Citadel">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">编程之道 卷四 编码
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2014-03-19 13:48:00" itemprop="dateCreated datePublished" datetime="2014-03-19T13:48:00+08:00">2014-03-19</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-10 01:03:25" itemprop="dateModified" datetime="2019-10-10T01:03:25+08:00">2019-10-10</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/编程之道/" itemprop="url" rel="index"><span itemprop="name">编程之道</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Book-4-Coding"><a href="#Book-4-Coding" class="headerlink" title="Book 4 - Coding"></a>Book 4 - Coding</h2><p><strong><em>Thus spake the master programmer:</em></strong><br><em>“A well-written program is its own heaven; a poorly-written program is its own hell.”</em></p>
+<p><strong><em>编程大师如是说：</em></strong><br><em>“写得好的程序是它自己的天堂；写的糟的程序是自己的地狱。”</em></p>
+<a id="more"></a>
+<h3 id="4-1"><a href="#4-1" class="headerlink" title="4.1"></a>4.1</h3><p>A program should be light and agile, its subroutines connected like a string of pearls. The spirit and intent of the program should be retained throughout. There should be neither too little or too much, neither needless loops nor useless variables, neither lack of structure nor overwhelming rigidity.<br>一个程序应当轻便而敏捷，它的子程序犹如串在一条线上的珍珠。程序的意图应当始终如一。程序的规模不应过短，也不宜过长；不该有不必要的循环，也不需要多余的变量；不应缺少结构化，也不能过于僵硬。</p>
+<p>A program should follow the ‘Law of Least Astonishment’. What is this law? It is simply that the program should always respond to the user in the way that astonishes him least.<br>一个程序应当遵循“最小惊讶原则”。这个原则又是什么？它就是说用户在使用程序时，感到的惊讶程度应当最小。</p>
+<p>A program, no matter how complex, should act as a single unit. The program should be directed by the logic within rather than by outward appearances.<br>一个程序，无论多么复杂，都应当作为一个独立的单元。程序应当被其内部的逻辑所引导，而不应该是外部表现。</p>
+<p>If the program fails in these requirements, it will be in a state of disorder and confusion. The only way to correct this is to rewrite the program.<br>如果程序不能够满足其需求，将会陷入紊乱状态。这时唯一的解决方案，就是重写这个程序。</p>
+<h3 id="4-2"><a href="#4-2" class="headerlink" title="4.2"></a>4.2</h3><p>A novice asked the master: “I have a program that sometime runs and sometimes aborts. I have followed the rules of programming, yet I am totally baffled. What is the reason for this?”<br>一位新手问大师：“我有一个程序运行起来偶尔正常偶尔不正常。我已经遵循了编程的规范，这样我就不明白了。这到底是什么原因引起的呢？”</p>
+<p>The master replied: “You are confused because you do not understand Tao. Only a fool expects rational behavior from his fellow humans. Why do you expect it from a machine that humans have constructed? Computers simulate determinism; only Tao is perfect.<br>大师回复：“你之所以困惑，是因为你没有理解‘道’。只有笨蛋才会相信遵循别人说的规范就能让程序按预期地去执行。为什么你会相信人类所造的机器会产生预期的结果呢？计算机不过是在模拟宿命论；只有‘道’才是完美的。</p>
+<p>“The rules of programming are transitory; only Tao is eternal. Therefore you must contemplate Tao before you receive enlightenment.”<br>“编程的规则都是暂时的；只有‘道’才是永恒的。因此，你在接受启发之前，应当先去沉思一下‘道’。”</p>
+<p>“But how will I know when I have received enlightenment?” asked the novice.<br>“但是我怎么知道我什么时候会接受启发呢？”新手继续问道。</p>
+<p>“Your program will then run correctly,” replied the master.<br>“当你的程序正确运行时，”大师回答。</p>
+<h3 id="4-3"><a href="#4-3" class="headerlink" title="4.3"></a>4.3</h3><p>A master was explaining the nature of Tao of to one of his novices. “The Tao is embodied in all software - regardless of how insignificant,” said the master.<br>大师向他的一位新学生讲解道的本质。“道蕴含于一切软件中——不论它多么微不足道”，大师说道。</p>
+<p>“Is the Tao in a hand-held calculator?” asked the novice.<br>“那么，道是否存在于手持计算器中？”，学生问道。</p>
+<p>“It is,” came the reply.<br>“是的”，大师回答。</p>
+<p>“Is the Tao in a video game?” continued the novice.<br>“那么，道是否存在于一个视频游戏中？”，学生接着问。</p>
+<p>“It is even in a video game,” said the master.<br>“对，即使是个游戏”，大师回答。</p>
+<p>“And is the Tao in the DOS for a personal computer?”<br>“那，道是否存在于PC机上的DOS中？”</p>
+<p>The master coughed and shifted his position slightly. “The lesson is over for today,” he said.<br>大师咳嗽了几声，轻轻挪动了一下位置，回答道：“今天的课就上到这里”。</p>
+<h3 id="4-4"><a href="#4-4" class="headerlink" title="4.4"></a>4.4</h3><p>Prince Wang’s programmer was coding software. His fingers danced upon the keyboard. The program compiled without an error message, and the program ran like a gentle wind.<br>普林斯·王手下的程序员正在编程。他的手指在键盘上飞舞。程序在编译时没有报任何错误信息，而程序在运行时如同行云流水。</p>
+<p>“Excellent!” the Prince exclaimed, “Your technique is faultless!”<br>“太棒了！”普林斯称赞道：“你的技术真是完美无缺！”</p>
+<p>“Technique?” said the programmer turning from his terminal, “What I follow is Tao - beyond all techniques! When I first began to program I would see before me the whole problem in one mass. After three years I no longer saw this mass. Instead, I used subroutines. But now I see nothing. My whole being exists in a formless void. My senses are idle. My spirit, free to work without plan, follows its own instinct. In short, my program writes itself. True, sometimes there are difficult problems. I see them coming, I slow down, I watch silently. Then I change a single line of code and the difficulties vanish like puffs of idle smoke. I then compile the program. I sit still and let the joy of the work fill my being. I close my eyes for a moment and then log off.”<br>“技术？”这位程序员从他的终端转过身来，“我追随的是道——它超乎了一切技术！当我刚开始编程时，我看到的是一大块的程序。三年之后，我看到的不再是一大块，而是子过程组成的。现在，我什么都看不到了。我的存在也只是无形虚空。我感到很悠闲，我不需要计划，自由地去工作，如同遵循着我的灵魂本性。简而言之，就像是我的程序自己在写那样。当然，有时也会遇到一些难题。看到它们，我会放慢速度，静静观察。接着我改了一行代码，问题瞬间烟消云散。然后我编译这个程序，并坐着上享受工作带来的喜悦充实着我的存在。我闭了会双眼，然后退出系统。”</p>
+<p>Prince Wang said, “Would that all of my programmers were as wise!”<br>普林斯·王感叹道：“什么时候我的所有程序员才能够都达到这样的境界！”</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/编程之道/" rel="tag"># 编程之道</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2014/01/30/top-book-3/" rel="next" title="编程之道 卷三 设计">
+                  <i class="fa fa-chevron-left"></i> 编程之道 卷三 设计
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2014/03/20/top-book-5/" rel="prev" title="编程之道 卷五 维护">
+                  编程之道 卷五 维护 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Book-4-Coding"><span class="nav-number">1.</span> <span class="nav-text">Book 4 - Coding</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1"><span class="nav-number">1.1.</span> <span class="nav-text">4.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2"><span class="nav-number">1.2.</span> <span class="nav-text">4.2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3"><span class="nav-number">1.3.</span> <span class="nav-text">4.3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4"><span class="nav-number">1.4.</span> <span class="nav-text">4.4</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Arathi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+        
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Arathi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

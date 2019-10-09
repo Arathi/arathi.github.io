@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Book 3 - DesignThus spake the master programmer:“When the program is being tested, it is too late to make design changes.” 编程大师如是说：“当程序开始测试后，再去改变设计就太晚了。”">
+<meta name="keywords" content="编程之道">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编程之道 卷三 设计">
+<meta property="og:url" content="http://blog.undsf.com/2014/01/30/top-book-3/index.html">
+<meta property="og:site_name" content="Nebnizilla Citadel">
+<meta property="og:description" content="Book 3 - DesignThus spake the master programmer:“When the program is being tested, it is too late to make design changes.” 编程大师如是说：“当程序开始测试后，再去改变设计就太晚了。”">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-09T17:03:25.871Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编程之道 卷三 设计">
+<meta name="twitter:description" content="Book 3 - DesignThus spake the master programmer:“When the program is being tested, it is too late to make design changes.” 编程大师如是说：“当程序开始测试后，再去改变设计就太晚了。”">
+  <link rel="canonical" href="http://blog.undsf.com/2014/01/30/top-book-3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>编程之道 卷三 设计 | Nebnizilla Citadel</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Nebnizilla Citadel</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">奈伯尼吉拉城塞</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://blog.undsf.com/2014/01/30/top-book-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Arathi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nebnizilla Citadel">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">编程之道 卷三 设计
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2014-01-30 16:20:00" itemprop="dateCreated datePublished" datetime="2014-01-30T16:20:00+08:00">2014-01-30</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-10 01:03:25" itemprop="dateModified" datetime="2019-10-10T01:03:25+08:00">2019-10-10</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/编程之道/" itemprop="url" rel="index"><span itemprop="name">编程之道</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Book-3-Design"><a href="#Book-3-Design" class="headerlink" title="Book 3 - Design"></a>Book 3 - Design</h2><p><strong><em>Thus spake the master programmer:</em></strong><br><em>“When the program is being tested, it is too late to make design changes.”</em></p>
+<p><strong><em>编程大师如是说：</em></strong><br><em>“当程序开始测试后，再去改变设计就太晚了。”</em></p>
+<a id="more"></a>
+<h3 id="3-1"><a href="#3-1" class="headerlink" title="3.1"></a>3.1</h3><p>There once was a man who went to a computer trade show. Each day as he entered, the man told the guard at the door: “I am a great thief, renowned for my feats of shoplifting. Be forewarned, for this trade show shall not escape unplundered.”<br>从前，有个人去参加一场计算机会展。每天进门以前，他都对门口的警卫说：“我可是个神偷，以我顺手牵羊的本领而闻名。所以先警告你们一下，这次的会展也在劫难逃。”</p>
+<p>This speech disturbed the guard greatly, because there were millions of dollars of computer equipment inside, so he watched the man carefully. But the man merely wandered from booth to booth, humming quietly to himself.<br>对此，警卫感到非常不安，因为展览出的计算机设备价值高达数百万美金，因此他紧紧盯着这个人。然而这个人只是一个展位一个展位地徘徊着，一边喃喃自语。</p>
+<p>When the man left, the guard took him aside and searched his clothes, but nothing was to be found.<br>当这个人离开时，警卫把他带到一边搜了他的身，但是什么都没发现。</p>
+<p>On the next day of the trade show, the man returned and chided the guard saying: “I escaped with a vast booty yesterday, but today will be even better.” So the guard watched him ever more closely, but to no avail.<br>在会展的第二天，这个人又出现了，然后还对警卫说：“昨天我满载而归，而且今天的收获将会更多。”因此，警卫盯他盯得更紧了，但是没什么效果。</p>
+<p>On the final day of the trade show, the guard could restrain his curiosity no longer. “Sir Thief,” he said, “I am so perplexed, I cannot live in peace. Please enlighten me. What is it that you are stealing?”<br>到了会展的最后一天，警卫终于忍不住自己的好奇心了。“小偷先生，”他问道，“我现在非常困扰。能不能提醒一下我，您到底在偷些什么？”</p>
+<p>The man smiled. “I am stealing ideas”, he said.<br>那个人笑了笑，说：“我在偷想法。”</p>
+<h3 id="3-2"><a href="#3-2" class="headerlink" title="3.2"></a>3.2</h3><p>There once was a master programmer who wrote unstructured programs. A novice programmer, seeking to imitate him, also began to write unstructured programs.<br>曾经，有位编程大师，总是写非结构化的程序。有位新手程序员，刻意地去模仿他，也开始写非结构化的程序。</p>
+<p>When the novice asked the master to evaluate his progress, the master criticized him for writing unstructured programs, saying, “What is appropriate for the master is not appropriate for the novice. You must understand the Tao before transcending structure.”<br>当他让大师看看他最近的进步时，大师批评了他写的非结构化程序：“适用于大师的东西，未必适用于新手。你必须先理解透‘道’，才能够超越结构化。”</p>
+<h3 id="3-3"><a href="#3-3" class="headerlink" title="3.3"></a>3.3</h3><p>There was once a programmer who was attached to the court of the warlord of Wu. The warlord asked the programmer: “Which is easier to design: an accounting package or an operating system?”<br>以前有位程序员，为吴军阀工作。有天，军阀问这位程序员：“财务软件和操作系统，哪个更容易设计呢？”</p>
+<p>“An operating system,” replied the programmer.<br>“操作系统更容易，”程序员答道。</p>
+<p>The warlord uttered an exclamation of disbelief. “Surely an accounting package is trivial next to the complexity of an operating system”, he said.<br>军阀对此感到质疑：“显然，财务软件的复杂性跟操作系统相比，显得微不足道。”</p>
+<p>“Not so,” said the programmer, “when designing an accounting package, the programmer operates as a mediator between people having different ideas: how it must operate, how its reports must appear, and how it must conform to the tax laws. By contrast, an operating system is not limited by outside appearances. When designing an operating system, the programmer seeks the simplest harmony between machine and ideas. This is why an operating system is easier to design.”<br>“并非如此，”程序员说道：“当设计一个财务软件时，程序员不得不成为各种持不同意见的人之间的斡旋者，这些争议包括程序如何运作，报表如何显示，如何遵循税法等等。与此相比，操作系统并不受到外部事物的制约。设计操作系统时，程序员只需要寻求自己的思想与机器之间的朴素和谐。这就是为什么操作系统更加容易设计。”</p>
+<p>The warlord of Wu nodded and smiled. “That is all good and well, but which is easier to debug?”<br>吴军阀听了以后点头微笑，接着说道：“有道理。那么，哪个更容易调试呢？”</p>
+<p>The programmer made no reply.<br>这次，程序员没有回答。</p>
+<h3 id="3-4"><a href="#3-4" class="headerlink" title="3.4"></a>3.4</h3><p>A manager went to the master programmer and showed him the requirements document for a new application. The manager asked the master: “How long will it take to design this system if I assign five programmers to it?”<br>一位经理去拜访一位编程大师，向他展示了一个新的应用程序的需求文档，然后问大师：“如果我有5个程序员，完成这个系统得花多长时间？”</p>
+<p>“It will take one year,” said the master promptly.<br>“要一年”，大师马上回答。</p>
+<p>“But we need this system immediately or even sooner! How long will it take if I assign ten programmers to it?”<br>“但我们马上就要得到这个系统，越快越好！如果有10个程序员，又要花多久？”</p>
+<p>The master programmer frowned. “In that case, it will take two years.”<br>大师皱了皱眉头：“这样的话，得两年。”</p>
+<p>“And what if I assign a hundred programmers to it?”<br>“那要是有100个程序员呢？”</p>
+<p>The master programmer shrugged. “Then the design will never be completed,” he said.<br>大师耸耸肩，“那这个项目永远也做不完了。”</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/编程之道/" rel="tag"># 编程之道</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2014/01/26/top-book-2/" rel="next" title="编程之道 卷二 远古宗师">
+                  <i class="fa fa-chevron-left"></i> 编程之道 卷二 远古宗师
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2014/03/19/top-book-4/" rel="prev" title="编程之道 卷四 编码">
+                  编程之道 卷四 编码 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Book-3-Design"><span class="nav-number">1.</span> <span class="nav-text">Book 3 - Design</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1"><span class="nav-number">1.1.</span> <span class="nav-text">3.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2"><span class="nav-number">1.2.</span> <span class="nav-text">3.2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3"><span class="nav-number">1.3.</span> <span class="nav-text">3.3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4"><span class="nav-number">1.4.</span> <span class="nav-text">3.4</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Arathi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+        
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Arathi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

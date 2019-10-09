@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="一. 源码解析工具准备 FC模拟器/调试器：FCEUX 十六进制编辑器：HxD 6502仿真器/汇编器：6502 Macroassembler &amp;amp; Simulator 文本编辑器：VSCode">
+<meta name="keywords" content="6502,FC&#x2F;NES,逆向工程,Javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FC游戏背后的秘密（一）：摩艾君的续关密码">
+<meta property="og:url" content="http://blog.undsf.com/2019/10/08/fcgames-moaikun-password/index.html">
+<meta property="og:site_name" content="Nebnizilla Citadel">
+<meta property="og:description" content="一. 源码解析工具准备 FC模拟器/调试器：FCEUX 十六进制编辑器：HxD 6502仿真器/汇编器：6502 Macroassembler &amp;amp; Simulator 文本编辑器：VSCode">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-09T17:03:25.871Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FC游戏背后的秘密（一）：摩艾君的续关密码">
+<meta name="twitter:description" content="一. 源码解析工具准备 FC模拟器/调试器：FCEUX 十六进制编辑器：HxD 6502仿真器/汇编器：6502 Macroassembler &amp;amp; Simulator 文本编辑器：VSCode">
+  <link rel="canonical" href="http://blog.undsf.com/2019/10/08/fcgames-moaikun-password/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>FC游戏背后的秘密（一）：摩艾君的续关密码 | Nebnizilla Citadel</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Nebnizilla Citadel</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">奈伯尼吉拉城塞</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://blog.undsf.com/2019/10/08/fcgames-moaikun-password/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Arathi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nebnizilla Citadel">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">FC游戏背后的秘密（一）：摩艾君的续关密码
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-08 12:30:00" itemprop="dateCreated datePublished" datetime="2019-10-08T12:30:00+08:00">2019-10-08</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-10 01:03:25" itemprop="dateModified" datetime="2019-10-10T01:03:25+08:00">2019-10-10</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/FC-NES/" itemprop="url" rel="index"><span itemprop="name">FC/NES</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一-源码解析"><a href="#一-源码解析" class="headerlink" title="一. 源码解析"></a>一. 源码解析</h2><h3 id="工具准备"><a href="#工具准备" class="headerlink" title="工具准备"></a>工具准备</h3><ul>
+<li>FC模拟器/调试器：<a href="https://ci.appveyor.com/project/zeromus/fceux/build/artifacts" target="_blank" rel="noopener">FCEUX</a></li>
+<li>十六进制编辑器：<a href="https://mh-nexus.de/en/downloads.php?product=HxD20" target="_blank" rel="noopener">HxD</a></li>
+<li>6502仿真器/汇编器：<a href="http://exifpro.com/utils.html" target="_blank" rel="noopener">6502 Macroassembler &amp; Simulator</a></li>
+<li>文本编辑器：<a href="https://code.visualstudio.com" target="_blank" rel="noopener">VSCode</a></li>
+</ul>
+<a id="more"></a>
+<h3 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h3><ul>
+<li><a href="http://www.6502.org/tutorials/6502opcodes.html" target="_blank" rel="noopener">6502指令集</a></li>
+<li><a href="http://fms.komkon.org/EMUL8/NES.html" target="_blank" rel="noopener">FC硬件信息</a></li>
+</ul>
+<h3 id="重要内存地址获取"><a href="#重要内存地址获取" class="headerlink" title="重要内存地址获取"></a>重要内存地址获取</h3><p>首先找到存放密码的内存地址，先载入游戏，选择CONTINUE，进入输入密码的界面，打开RAM Search或者直接打开Hex Editor观察，就会发现每次密码改动以后，<code>$52~$57</code>也会跟着改动，试着修改这6个地址的值，显示出来的密码也会跟着变化，由此确定<code>$52~$57</code>就是存放密码的。</p>
+<h3 id="密码的解析规则"><a href="#密码的解析规则" class="headerlink" title="密码的解析规则"></a>密码的解析规则</h3><p>先添加一个断点：当<code>$0052~$0057</code>读取时。此时会发现在<code>C4EA</code>这个位置一直读取<code>$52~$57</code>，大概是要更新屏幕上显示的数；给断点加个限制条件：<code>P != #C4EA</code>，就不会触发了。</p>
+<p>然后输入完密码，按下START，程序中断在了<code>C59A</code>，简单看看附近的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">; 初始化</span><br><span class="line">C578: LDA #$02</span><br><span class="line">C57A: STA $0008</span><br><span class="line">C57C: LDA #$00</span><br><span class="line">C57E: STA $0009 ; 已循环次数，也就是取$C5DC时的Y，可以理解为数组下标</span><br><span class="line">; 外层循环（$08）开始，共3次</span><br><span class="line">C580: LDA #$04</span><br><span class="line">C582: STA $000A</span><br><span class="line">C584: LDX $0008</span><br><span class="line">C586: LDA #$00</span><br><span class="line">C588: STA $00,X</span><br><span class="line">; 内层循环（$0A）开始，共4次</span><br><span class="line">C58A: LDY $0009</span><br><span class="line">C58C: LDA $C5DC,Y</span><br><span class="line">C58F: AND #$03 ; 取低2位，即后面的右移次数</span><br><span class="line">C591: PHA</span><br><span class="line">C592: LDA $C5DC,Y</span><br><span class="line">C595: LSR</span><br><span class="line">C596: LSR</span><br><span class="line">C597: TAX ; 取高6位，即密码的第几位（0~5）</span><br><span class="line">C598: PLA</span><br><span class="line">C599: TAY</span><br><span class="line">C59A: LDA $52,X ; 获取密码</span><br><span class="line">; 右移（根据$C5DC的数据分析，只会右移1次或者4次），即把b0或者b3放到C</span><br><span class="line">C59C: LSR</span><br><span class="line">C59D: DEY</span><br><span class="line">C59E: BPL $C59C</span><br><span class="line">; 计算$00~$02</span><br><span class="line">C5A0: LDX $0008</span><br><span class="line">C5A2: ROL $00,X ; 循环左移，将C移入</span><br><span class="line">C5A4: INC $0009</span><br><span class="line">C5A6: DEC $000A</span><br><span class="line">C5A8: BNE $C58A</span><br><span class="line">; 内循环结束</span><br><span class="line">C5AA: DEC $0008</span><br><span class="line">C5AC: BPL $C580</span><br><span class="line">; 外循环结束</span><br><span class="line">; 检查$00、$01、$02是否相等</span><br><span class="line">C5AE: LDA $0000</span><br><span class="line">C5B0: CMP $0001</span><br><span class="line">C5B2: BNE $C5DA </span><br><span class="line">C5B4: CMP $0002</span><br><span class="line">C5B6: BNE $C5DA ; $01、$02任意一个与$00不相等即失败</span><br><span class="line">; 取中间两位，计算校验和</span><br><span class="line">C5B8: LDA #$00</span><br><span class="line">C5BA: STA $0008</span><br><span class="line">C5BC: LDX #$05</span><br><span class="line">C5BE: LDA $52,X</span><br><span class="line">C5C0: LSR ; 去掉最低位</span><br><span class="line">C5C1: AND #$03 ; 保留低2位</span><br><span class="line">C5C3: CLC</span><br><span class="line">C5C4: ADC $0008 ; （不进位）相加</span><br><span class="line">C5C6: AND #$03 ; 保留低2位</span><br><span class="line">C5C8: STA $0008</span><br><span class="line">C5CA: DEX</span><br><span class="line">C5CB: BPL $C5BE</span><br><span class="line">C5CD: LDA $0008</span><br><span class="line">C5CF: BNE $C5DA ; $08不为0x00的时候就是失败</span><br><span class="line">; 正确返回，计算起始关卡 A = $00 * 4 + 1</span><br><span class="line">C5D1: LDA $0000</span><br><span class="line">C5D3: ASL</span><br><span class="line">C5D4: ASL</span><br><span class="line">C5D5: CLC</span><br><span class="line">C5D6: ADC #$01</span><br><span class="line">C5D8: SEC ; 设置C=1表示成功</span><br><span class="line">C5D9: RTS</span><br><span class="line">; 失败返回</span><br><span class="line">C5DA: CLC ; 设置C=0表示失败</span><br><span class="line">C5DB: RTS</span><br></pre></td></tr></table></figure>
+<p>接下来看看$C5DC的数据：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>十六进制</th>
+<th><script type="math/tex">\overline{b_7 b_6 b_5 b_4 b_3 b_2}</script></th>
+<th><script type="math/tex">\overline{b_1 b_0}</script></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C5DC</td>
+<td>00</td>
+<td>000000 (0)</td>
+<td>00</td>
+</tr>
+<tr>
+<td>C5DD</td>
+<td>04</td>
+<td>000001 (1)</td>
+<td>00</td>
+</tr>
+<tr>
+<td>C5DE</td>
+<td>08</td>
+<td>000010 (2)</td>
+<td>00</td>
+</tr>
+<tr>
+<td>C5DF</td>
+<td>0C</td>
+<td>000011 (3)</td>
+<td>00</td>
+</tr>
+<tr>
+<td>C5E0</td>
+<td>0B</td>
+<td>000010 (2)</td>
+<td>11</td>
+</tr>
+<tr>
+<td>C5E1</td>
+<td>0F</td>
+<td>000011 (3)</td>
+<td>11</td>
+</tr>
+<tr>
+<td>C5E2</td>
+<td>13</td>
+<td>000100 (4)</td>
+<td>11</td>
+</tr>
+<tr>
+<td>C5E3</td>
+<td>17</td>
+<td>000101 (5)</td>
+<td>11</td>
+</tr>
+<tr>
+<td>C5E4</td>
+<td>14</td>
+<td>000101 (5)</td>
+<td>00</td>
+</tr>
+<tr>
+<td>C5E5</td>
+<td>10</td>
+<td>000100 (4)</td>
+<td>00</td>
+</tr>
+<tr>
+<td>C5E6</td>
+<td>03</td>
+<td>000000 (0)</td>
+<td>11</td>
+</tr>
+<tr>
+<td>C5E7</td>
+<td>07</td>
+<td>000001 (1)</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>由此可见每位密码会被读取两次，分别是读取<script type="math/tex">b_0</script>和<script type="math/tex">b_3</script>。第一次外循环读取密码的1、2、3、4位的$b_0$，第二次循环读取密码的3、4、5、6位的$b_3$，第三次循环读取密码的6、5位的$b_0$和1、2位的$b_3$。</p>
+<h2 id="二-密码规则结论与验证"><a href="#二-密码规则结论与验证" class="headerlink" title="二. 密码规则结论与验证"></a>二. 密码规则结论与验证</h2><p>通过上面代码的分析，每个密码的1~4位的$b_0$为一组，3~6位的$b_3$为一组，6~5位的$b_0$和1~2位的$b_3$为一组，这三组的值就是大关编号（暂时命名为<code>stage</code>），当然也要相等；另外每位密码的$\overline{b_2 b_1}$相加必须能被4整除。</p>
+<p>接下来以<code>C91BB8</code>这个密码（29关，从小记到现在）为例，验证密码规则是否正确：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>密码位</th>
+<th>二进制</th>
+<th>$ b_3 $</th>
+<th>$\overline{b_2 b_1}$</th>
+<th>$ b_0 $</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C</td>
+<td>1100</td>
+<td>1</td>
+<td>10</td>
+<td>0</td>
+</tr>
+<tr>
+<td>9</td>
+<td>1001</td>
+<td>1</td>
+<td>00</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0001</td>
+<td>0</td>
+<td>00</td>
+<td>1</td>
+</tr>
+<tr>
+<td>B</td>
+<td>1011</td>
+<td>1</td>
+<td>01</td>
+<td>1</td>
+</tr>
+<tr>
+<td>B</td>
+<td>1011</td>
+<td>1</td>
+<td>01</td>
+<td>1</td>
+</tr>
+<tr>
+<td>8</td>
+<td>1000</td>
+<td>1</td>
+<td>00</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>$(29-1)\div4=7$，即$0111_2$，而三组stage值也都是$0111_2$，而且每位的$\overline{b_2 b_1}$相加的和为$100_2$，确实能被4整除。</p>
+<p>然后我们再来手动生成一个密码，并在实际游戏中验证规则是否正确，由于这个游戏总共有56关（虽然理论上最多可以有64关），我们就选最后一个场景的起始关卡第53关，$(53-1) \div 4 = 13 = 1101_2$，也就是说三组<code>stage</code>的值是<code>1101</code>。就有以下密码：</p>
+<p><code>0001(1)</code>, <code>1001(9)</code>, <code>1000(8)</code>, <code>1001(9)</code>, <code>0001(1)</code>, <code>1001(9)</code></p>
+<p>在这里，由于中间两位随机生成嫌麻烦，就全用0代替（反正0加起来截取低两位也是00）于是就获得了密码<code>198919</code>，进入游戏选CONTINUE，输入密码，按START，成功进入53关。</p>
+<h2 id="三-密码生成器"><a href="#三-密码生成器" class="headerlink" title="三. 密码生成器"></a>三. 密码生成器</h2><p>就用js随便写一个吧。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>摩艾君密码生成器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">'utf-8'</span>&gt;</span><span class="tag">&lt;/<span class="name">meta</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    请选择关卡：<span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">'ddlLevels'</span>&gt;</span><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">'btnGenerate'</span> <span class="attr">name</span>=<span class="string">'btnGenerate'</span>&gt;</span>生成<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"password"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.bootcss.com/jquery/3.4.1/jquery.slim.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line">      function convert(passwordArray) &#123;</span><br><span class="line">        var password = ''</span><br><span class="line">        for (var i in passwordArray) &#123;</span><br><span class="line">          var p = passwordArray[i]</span><br><span class="line">          if (p &gt;= 0 &amp;&amp; p &lt;= 9) &#123;</span><br><span class="line">            password += String.fromCharCode(p + 0x30)</span><br><span class="line">          &#125;</span><br><span class="line">          else if (p &gt;= 0x0A &amp;&amp; p &lt;= 0x0F) &#123;</span><br><span class="line">            password += String.fromCharCode(p + 0x37)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return password</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      function generate(level) &#123;</span><br><span class="line">        var password = [0, 0, 0, 0, 0, 0]</span><br><span class="line">        var pswIndexes = [0, 1, 2, 3, 2, 3, 4, 5, 5, 4, 0, 1]</span><br><span class="line">        var rsCounts = [0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 3, 3]</span><br><span class="line">        for (var i = 2; i &gt;= 0; i--) &#123;</span><br><span class="line">          var stage = (level - 1) &gt;&gt; 2</span><br><span class="line">          for (var j = 3; j &gt;= 0; j--) &#123;</span><br><span class="line">            var dataIndex = i*4 + j</span><br><span class="line">            var bit = (stage % 2) &lt;&lt; rsCounts[dataIndex]</span><br><span class="line">            stage &gt;&gt;= 1</span><br><span class="line">            password[pswIndexes[dataIndex]] |= bit</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return convert(password)</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      $('#btnGenerate').click(function()&#123;</span><br><span class="line">        var level = $('#ddlLevels').val()</span><br><span class="line">        $("#password").html("密码为：" + generate(level))</span><br><span class="line">      &#125;)</span><br><span class="line">      </span><br><span class="line">      $(document).ready(function()&#123;</span><br><span class="line">        for (var i=0; i&lt;=13; i++) &#123;</span><br><span class="line">          var startLevel = i*4 + 1</span><br><span class="line">          var endLevel = i*4 + 3</span><br><span class="line"><span class="xml">          var eleHtml = "<span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">'" + startLevel + "'</span>&gt;</span>" + startLevel + '~' + endLevel + "<span class="tag">&lt;/<span class="name">option</span>&gt;</span>"</span></span><br><span class="line">          $('#ddlLevels').append(eleHtml)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/6502/" rel="tag"># 6502</a>
+            
+              <a href="/tags/FC-NES/" rel="tag"># FC/NES</a>
+            
+              <a href="/tags/逆向工程/" rel="tag"># 逆向工程</a>
+            
+              <a href="/tags/Javascript/" rel="tag"># Javascript</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2016/12/10/kancolle-core-swf-decompile/" rel="next" title="关于舰C的Core.swf文件的解密与反编译">
+                  <i class="fa fa-chevron-left"></i> 关于舰C的Core.swf文件的解密与反编译
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-源码解析"><span class="nav-number">1.</span> <span class="nav-text">一. 源码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工具准备"><span class="nav-number">1.1.</span> <span class="nav-text">工具准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#背景知识"><span class="nav-number">1.2.</span> <span class="nav-text">背景知识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重要内存地址获取"><span class="nav-number">1.3.</span> <span class="nav-text">重要内存地址获取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#密码的解析规则"><span class="nav-number">1.4.</span> <span class="nav-text">密码的解析规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-密码规则结论与验证"><span class="nav-number">2.</span> <span class="nav-text">二. 密码规则结论与验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-密码生成器"><span class="nav-number">3.</span> <span class="nav-text">三. 密码生成器</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Arathi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+        
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Arathi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+  
+
+  
+
+  
+
+</body>
+</html>

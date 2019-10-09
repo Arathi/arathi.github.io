@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Book 5 - MaintenanceThus spake the master programmer:“Though a program be but three lines long, someday it will have to be maintained.” 编程大师如是说：“即使是个只有三行代码的程序，也总有一天需要维护。”">
+<meta name="keywords" content="编程之道">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编程之道 卷五 维护">
+<meta property="og:url" content="http://blog.undsf.com/2014/03/20/top-book-5/index.html">
+<meta property="og:site_name" content="Nebnizilla Citadel">
+<meta property="og:description" content="Book 5 - MaintenanceThus spake the master programmer:“Though a program be but three lines long, someday it will have to be maintained.” 编程大师如是说：“即使是个只有三行代码的程序，也总有一天需要维护。”">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-09T17:03:25.871Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编程之道 卷五 维护">
+<meta name="twitter:description" content="Book 5 - MaintenanceThus spake the master programmer:“Though a program be but three lines long, someday it will have to be maintained.” 编程大师如是说：“即使是个只有三行代码的程序，也总有一天需要维护。”">
+  <link rel="canonical" href="http://blog.undsf.com/2014/03/20/top-book-5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>编程之道 卷五 维护 | Nebnizilla Citadel</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Nebnizilla Citadel</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">奈伯尼吉拉城塞</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://blog.undsf.com/2014/03/20/top-book-5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Arathi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nebnizilla Citadel">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">编程之道 卷五 维护
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2014-03-20 12:00:00" itemprop="dateCreated datePublished" datetime="2014-03-20T12:00:00+08:00">2014-03-20</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-10 01:03:25" itemprop="dateModified" datetime="2019-10-10T01:03:25+08:00">2019-10-10</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/编程之道/" itemprop="url" rel="index"><span itemprop="name">编程之道</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Book-5-Maintenance"><a href="#Book-5-Maintenance" class="headerlink" title="Book 5 - Maintenance"></a>Book 5 - Maintenance</h2><p><strong><em>Thus spake the master programmer:</em></strong><br><em>“Though a program be but three lines long, someday it will have to be maintained.”</em></p>
+<p><strong><em>编程大师如是说：</em></strong><br><em>“即使是个只有三行代码的程序，也总有一天需要维护。”</em></p>
+<a id="more"></a>
+<h3 id="5-1"><a href="#5-1" class="headerlink" title="5.1"></a>5.1</h3><p>A well-used door needs no oil on its hinges. A swift-flowing stream does not grow stagnant. Neither sound nor thoughts can travel through a vacuum. Software rots if not used.<br>使用良好的门的铰链不需要上油。快速流动的河不会停滞不前。声音和思想都无法在真空中传播。软件不用也会腐烂。</p>
+<p>These are great mysteries.<br>这些都是非常神奇的事物。</p>
+<h3 id="5-2"><a href="#5-2" class="headerlink" title="5.2"></a>5.2</h3><p>A manager asked a programmer how long it would take him to finish the program on which he was working.<br>“It will be finished tomorrow,” the programmer promptly replied.<br>“I think you are being unrealistic,” said the manager, “Truthfully, how long will it take?”<br>The programmer thought for a moment. “I have some features that I wish to add. This will take at least two weeks,” he finally said.<br>“Even that is too much to expect,” insisted the manager, “I will be satisfied if you simply tell me when the program is complete.”<br>The programmer agreed to this.<br>Several years later, the manager retired. On the way to his retirement luncheon, he discovered the programmer asleep at his terminal. He had been programming all night.  </p>
+<p>一位经理向一位程序员询问他当前在做的项目还要做多长时间。<br>“明天能做完，”程序员马上回答。<br>“我觉得你估得不靠谱，”经理说，“说真的，多长时间能做完？”<br>程序员想了一会儿。“我想往里面添加点新功能。这至少得花个两个星期，”他最后这么说。<br>“即使这样，还是有点夸张，”经理坚决说道：“你只要什么时候做完了再告诉我就行了。”<br>程序员答应了。<br>几年过去，经理退休了。在他的退休午餐会上，他发现这位程序员在他的终端前睡着了。他整夜都在编那个程序。</p>
+<h3 id="5-3"><a href="#5-3" class="headerlink" title="5.3"></a>5.3</h3><p>A novice programmer was once assigned to code a simple financial package.<br>有个菜鸟程序员被指派去编写一套简单的财务相关的软件包。</p>
+<p>The novice worked furiously for many days, but when his master reviewed his program, he discovered that it contained a screen editor, a set of generalized graphics routines, an artificial intelligence interface, but not the slightest mention of anything financial.<br>这位菜鸟疯狂地工作了数天，当他的主管审查他的代码时，发现他写了一个编辑器，一个图形程序，一个人工智能接口，就是没看到一丁点跟财务相关的东西。</p>
+<p>When the master asked about this, the novice became indignant. “Don’t be so impatient,” he said, “I’ll put in the financial stuff eventually.”<br>当主管问到这一点时，那位菜鸟怒了。“别这么没耐心嘛，”他说，“我会在最后一部分写财务相关的东西。”</p>
+<h3 id="5-4"><a href="#5-4" class="headerlink" title="5.4"></a>5.4</h3><p>Does a good farmer neglect a crop he has planted?<br>Does a good teacher overlook even the most humble student?<br>Does a good father allow a single child to starve?<br>Does a good programmer refuse to maintain his code?<br>一个好的农夫会忽视自己地里的庄稼吗？<br>一个好的老师会忽视自己哪怕是最糟糕的学生吗？<br>一个好的父亲会让自己的任何一个孩子饿死吗？<br>一个好的程序员会拒绝去维护自己的代码吗？  </p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/编程之道/" rel="tag"># 编程之道</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2014/03/19/top-book-4/" rel="next" title="编程之道 卷四 编码">
+                  <i class="fa fa-chevron-left"></i> 编程之道 卷四 编码
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2014/03/21/top-book-6/" rel="prev" title="编程之道 卷六 管理">
+                  编程之道 卷六 管理 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Book-5-Maintenance"><span class="nav-number">1.</span> <span class="nav-text">Book 5 - Maintenance</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1"><span class="nav-number">1.1.</span> <span class="nav-text">5.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2"><span class="nav-number">1.2.</span> <span class="nav-text">5.2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3"><span class="nav-number">1.3.</span> <span class="nav-text">5.3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4"><span class="nav-number">1.4.</span> <span class="nav-text">5.4</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Arathi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+        
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Arathi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
