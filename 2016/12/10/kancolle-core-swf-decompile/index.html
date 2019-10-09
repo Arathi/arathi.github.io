@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="关于舰C的Core.swf文件的解密与反编译个人感觉Core.swf就是舰C本地缓存中最神秘的一个文件，唯独这个文件在反编译器中打不开，里面也许有我想知道的所有的舰C客户端上的秘密。这次我想看看这个文件是怎么一回事。 首先用FFDec（JPEXS Free Flash Decompiler，之前汉化一个叫《遗迹岛》的AIR游戏，因为没钱买硕思，所以找到这个开源货，想不到还挺好用的）打开mainD2">
+<meta name="keywords" content="Flash,ActionScript,FFDec,Kancolle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于舰C的Core.swf文件的解密与反编译">
+<meta property="og:url" content="http://blog.undsf.com/2016/12/10/kancolle-core-swf-decompile/index.html">
+<meta property="og:site_name" content="Nebnizilla Citadel">
+<meta property="og:description" content="关于舰C的Core.swf文件的解密与反编译个人感觉Core.swf就是舰C本地缓存中最神秘的一个文件，唯独这个文件在反编译器中打不开，里面也许有我想知道的所有的舰C客户端上的秘密。这次我想看看这个文件是怎么一回事。 首先用FFDec（JPEXS Free Flash Decompiler，之前汉化一个叫《遗迹岛》的AIR游戏，因为没钱买硕思，所以找到这个开源货，想不到还挺好用的）打开mainD2">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-09T16:26:36.902Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于舰C的Core.swf文件的解密与反编译">
+<meta name="twitter:description" content="关于舰C的Core.swf文件的解密与反编译个人感觉Core.swf就是舰C本地缓存中最神秘的一个文件，唯独这个文件在反编译器中打不开，里面也许有我想知道的所有的舰C客户端上的秘密。这次我想看看这个文件是怎么一回事。 首先用FFDec（JPEXS Free Flash Decompiler，之前汉化一个叫《遗迹岛》的AIR游戏，因为没钱买硕思，所以找到这个开源货，想不到还挺好用的）打开mainD2">
+  <link rel="canonical" href="http://blog.undsf.com/2016/12/10/kancolle-core-swf-decompile/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>关于舰C的Core.swf文件的解密与反编译 | Nebnizilla Citadel</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Nebnizilla Citadel</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">奈伯尼吉拉城塞</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://blog.undsf.com/2016/12/10/kancolle-core-swf-decompile/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Arathi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nebnizilla Citadel">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">关于舰C的Core.swf文件的解密与反编译
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2016-12-10 20:58:00" itemprop="dateCreated datePublished" datetime="2016-12-10T20:58:00+08:00">2016-12-10</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-10 00:26:36" itemprop="dateModified" datetime="2019-10-10T00:26:36+08:00">2019-10-10</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Flash/" itemprop="url" rel="index"><span itemprop="name">Flash</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="关于舰C的Core-swf文件的解密与反编译"><a href="#关于舰C的Core-swf文件的解密与反编译" class="headerlink" title="关于舰C的Core.swf文件的解密与反编译"></a>关于舰C的Core.swf文件的解密与反编译</h2><p>个人感觉Core.swf就是舰C本地缓存中最神秘的一个文件，唯独这个文件在反编译器中打不开，里面也许有我想知道的所有的舰C客户端上的秘密。这次我想看看这个文件是怎么一回事。</p>
+<p>首先用<a href="https://www.free-decompiler.com/flash/download/" target="_blank" rel="noopener">FFDec</a>（JPEXS Free Flash Decompiler，之前汉化一个叫《遗迹岛》的AIR游戏，因为没钱买硕思，所以找到这个开源货，想不到还挺好用的）打开mainD2.swf。里面有个mainD2类，明显就是整个程序的入口。</p>
+<a id="more"></a>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public <span class="function"><span class="keyword">function</span> <span class="title">mainD2</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">    _anim = <span class="keyword">new</span> LoadingShipAnimation();</span><br><span class="line">    _anim.x = <span class="number">400</span>;</span><br><span class="line">    _anim.y = <span class="number">240</span>;</span><br><span class="line">    addChild(_anim);</span><br><span class="line">    _core = <span class="keyword">new</span> Loader();</span><br><span class="line">    addChild(_core);</span><br><span class="line">    <span class="keyword">var</span> _loc1_:Sprite = <span class="keyword">new</span> Sprite();</span><br><span class="line">    _loc1_.graphics.beginFill(<span class="number">0</span>);</span><br><span class="line">    _loc1_.graphics.drawRect(<span class="number">-800</span>,<span class="number">-480</span>,<span class="number">800</span>,<span class="number">1440</span>);</span><br><span class="line">    _loc1_.graphics.drawRect(<span class="number">0</span>,<span class="number">-480</span>,<span class="number">800</span>,<span class="number">480</span>);</span><br><span class="line">    _loc1_.graphics.drawRect(<span class="number">800</span>,<span class="number">-480</span>,<span class="number">800</span>,<span class="number">1440</span>);</span><br><span class="line">    _loc1_.graphics.drawRect(<span class="number">0</span>,<span class="number">480</span>,<span class="number">800</span>,<span class="number">480</span>);</span><br><span class="line">    _loc1_.graphics.endFill();</span><br><span class="line">    addChild(_loc1_);</span><br><span class="line">    addEventListener(<span class="string">"addedToStage"</span>,_handleAddToStage);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在构造函数中，实例化了一个<code>LoadingShipAnimation</code>，大概就是播放loading动画小黑船。</p>
+<p>在函数最后，添加了一个<code>addedToStage</code>事件的监听，回调函数是<code>_handleAddToStage()</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">private <span class="function"><span class="keyword">function</span> <span class="title">_handleAddToStage</span>(<span class="params">param1:Event</span>) : <span class="title">void</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    event = param1;</span><br><span class="line">    removeEventListener(<span class="string">"addedToStage"</span>,_handleAddToStage);</span><br><span class="line">    stage.addEventListener(<span class="string">"contextMenu"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">param1:MouseEvent</span>):<span class="title">void</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    &#125;);</span><br><span class="line">    stage.stageFocusRect = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">var</span> val:URLVariables = <span class="keyword">new</span> URLVariables();</span><br><span class="line">    val.version = <span class="string">"wodfmwagpixg"</span>;</span><br><span class="line">    <span class="keyword">var</span> req:URLRequest = <span class="keyword">new</span> URLRequest(<span class="string">"./Core.swf"</span>);</span><br><span class="line">    req.method = <span class="string">"GET"</span>;</span><br><span class="line">    req.data = val;</span><br><span class="line">    <span class="keyword">var</span> urlLoader:URLLoader = <span class="keyword">new</span> URLLoader();</span><br><span class="line">    urlLoader.dataFormat = <span class="string">"binary"</span>;</span><br><span class="line">    urlLoader.addEventListener(<span class="string">"complete"</span>,_handleLoadComplete);</span><br><span class="line">    urlLoader.load(req);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>进入<code>_handleAddToStage()</code>函数以后，首先删除了自身的事件监听，因此这个函数只会执行一次；<br>之后创建了HTTP请求相关的对象<code>URLVariables</code>、<code>URLRequest</code>，去请求获取”./Core.swf”，并创建了一个事件监听，在加载完成以后会回调<code>_handleLoadComplete()</code>函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">private <span class="function"><span class="keyword">function</span> <span class="title">_handleLoadComplete</span>(<span class="params">param1:Event</span>) : <span class="title">void</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> _loc2_:URLLoader = URLLoader(param1.target);</span><br><span class="line">    _loc2_.removeEventListener(<span class="string">"complete"</span>,_handleLoadComplete);</span><br><span class="line">    <span class="keyword">var</span> _loc4_:ByteArray = _loc2_.data;</span><br><span class="line">    <span class="keyword">var</span> _loc3_:ByteArray = <span class="keyword">new</span> ByteArray();</span><br><span class="line">    <span class="keyword">var</span> _loc6_:<span class="built_in">Object</span> = _createKey();</span><br><span class="line">    _core.contentLoaderInfo.addEventListener(<span class="string">"complete"</span>,_handleLoadComplete2);</span><br><span class="line">    _core.contentLoaderInfo.addEventListener(<span class="string">"ioError"</span>,_handleLoadError);</span><br><span class="line">    <span class="keyword">var</span> _loc5_:LoaderContext = <span class="keyword">new</span> LoaderContext();</span><br><span class="line">    _loc5_.applicationDomain = ApplicationDomain.currentDomain;</span><br><span class="line">    <span class="keyword">if</span>(loaderInfo.loaderURL.match(<span class="regexp">/^file:/</span>) == <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        ___(_loc4_,_loc3_,_loc6_);</span><br><span class="line">        _core.loadBytes(_loc3_,_loc5_);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        _core.loadBytes(_loc4_,_loc5_);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>进入到<code>_handleLoadComplete()</code>以后，跟<code>_handleAddToStage()</code>类似的，先删掉了自身的事件监听。</p>
+<p>然后调用了<code>_createKey()</code>函数，生成key，目前不妨猜测是解密文件用的key。</p>
+<p>接着又创建了一个<code>complete</code>事件的监听，回调函数为<code>_handleLoadComplete2()</code>。</p>
+<p>之后检查url是否在本地（包含<code>file:</code>），对于在本地与不在本地的，有两种处理方式。不在本地时需要调用一个叫<code>___()</code>的函数，传入了三个参数分别是<code>_loc4_</code>（字节数组，响应报文内容）、<code>_loc3_</code>（一个空字节数组）、<code>_loc6_</code>（创建出来的key），然后再调用<code>_core.loadBytes()</code>，传入的参数是<code>_loc3_</code>（大概是上个函数的输出参数，应该存放了解密后文件内容）和<code>_loc5_</code>（LoaderContext对象）；至于另一种情况，直接调用<code>_core.loadBytes()</code>，传入的参数是<code>_loc4_</code>和<code>_loc5_</code>。两者的区别就是，是否经过了<code>___()</code>这个邪恶函数的加工。</p>
+<p>可以猜测，以<code>file:</code>开头的，是为了娇喘程序员自己在本地开发调试时用着方便的，因此没有加密，直接加载；而实际使用时，URL不是本地的，所以都要使用<code>___()</code>来进行解密。</p>
+<p>接下来看看<code>___()</code>的逻辑：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">private <span class="function"><span class="keyword">function</span> <span class="title">___</span>(<span class="params">param1:ByteArray, param2:ByteArray, param3:Object</span>) : <span class="title">void</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> _loc4_:* = <span class="keyword">this</span>;</span><br><span class="line">    param3[param3[<span class="regexp">/.$/</span>(<span class="regexp">/..../</span>(param3))](_loc4_,<span class="string">""</span>)] = param3[<span class="regexp">/.$/</span>(<span class="regexp">/ .../</span>(&#123;&#125;))](<span class="regexp">/./</span>(<span class="regexp">/.. /</span>(&#123;&#125;)),/.$/(<span class="regexp">/../</span>(&#123;&#125;)),/./(<span class="regexp">/./</span>([])),/./(<span class="regexp">/..$/</span>(!&#123;&#125;)),/.../(!!&#123;&#125;),/../(<span class="regexp">/.. /</span>(&#123;&#125;)),/.$/(<span class="regexp">/../</span>(&#123;&#125;)),/.$/(<span class="regexp">/../</span>(!!&#123;&#125;)));</span><br><span class="line">    param3[~_loc4_] = ~_loc4_ &gt;&gt;&gt; ~_loc4_;</span><br><span class="line">    param3[param3[<span class="regexp">/./</span>(<span class="regexp">/.....$/</span>(param3))](<span class="string">""</span>,param3)] = <span class="string">""</span>[param3[_loc4_]];</span><br><span class="line">    param3[<span class="regexp">/./</span>(param3)] = ~_loc4_ / ~_loc4_ &lt;&lt; ~_loc4_ / ~_loc4_ &lt;&lt; ~_loc4_ / ~_loc4_;</span><br><span class="line">    <span class="keyword">var</span> _loc5_:* = param3[<span class="regexp">/./</span>(param3)] &lt;&lt; ~_loc4_ / ~_loc4_ &lt;&lt; ~_loc4_ / ~_loc4_ | ~_loc4_ / ~_loc4_;</span><br><span class="line">    param3[<span class="regexp">/ ./</span>((~~_loc4_)[param3[_loc4_]])] = _loc5_;</span><br><span class="line">    param3[<span class="regexp">/./</span>(&#123;&#125;)] = _loc5_;</span><br><span class="line">    param3[<span class="regexp">/../</span>([][&#123;&#125;])] = param3[<span class="regexp">/./</span>(param3)][param3[<span class="regexp">/.$/</span>(<span class="regexp">/..../</span>(&#123;&#125;))](<span class="regexp">/./</span>(!!&#123;&#125;),/.$/(<span class="regexp">/../</span>(&#123;&#125;)),/ (.*)]$/(param3[param3])[~_loc4_ / ~_loc4_])](~(~_loc4_ &lt;&lt; (<span class="regexp">/./</span>(<span class="regexp">/..$/</span>(~_loc4_ &lt;&lt; ~_loc4_)) | ~_loc4_ &lt;&lt; ~_loc4_ &gt;&gt;&gt; ~_loc4_)));</span><br><span class="line">    param3[<span class="regexp">/.$/</span>(!!&#123;&#125;)] = param3[<span class="regexp">/.$/</span>(<span class="regexp">/ .../</span>(&#123;&#125;))](<span class="regexp">/.$/</span>(<span class="regexp">/./</span>([])),/.$/(!&#123;&#125;),/./(<span class="regexp">/./</span>([])),/./(<span class="regexp">/.....$/</span>(<span class="regexp">/./</span>[param3[_loc4_]])),/./(!!&#123;&#125;),param3[<span class="regexp">/../</span>([][&#123;&#125;])]);</span><br><span class="line">    param3[<span class="regexp">/./</span>(&#123;&#125;)] = param3[<span class="regexp">/./</span>(<span class="regexp">/.....$/</span>(&#123;&#125;))](<span class="regexp">/./</span>(!&#123;&#125;),/.$/(<span class="regexp">/../</span>(!!&#123;&#125;)),/.$/(<span class="regexp">/../</span>(param3)),/.$/(<span class="regexp">/ .../</span>((~_loc4_)[param3[_loc4_]])),/.$/(<span class="regexp">/ ./</span>([][param3[_loc4_]][param3[_loc4_]])),param3[<span class="regexp">/../</span>([][&#123;&#125;])],/.$/(<span class="regexp">/../</span>(!&#123;&#125;)),/.$/(<span class="regexp">/../</span>(!!&#123;&#125;)),/.$/(<span class="regexp">/ ./</span>(param3[param3[_loc4_]][param3[_loc4_]])),/.$/(<span class="regexp">/../</span>(param3)),/.$/([][&#123;&#125;]),/.$/(!&#123;&#125;));</span><br><span class="line">    param3[<span class="regexp">/./</span>(&#123;&#125;)] = param3[param3][param3[<span class="regexp">/./</span>(param3)]];</span><br><span class="line">    param3[<span class="regexp">/..$/</span>(___)] = param3[<span class="regexp">/.$/</span>(<span class="regexp">/..../</span>(&#123;&#125;))](param3[param3](param3[_loc4_])[param3[<span class="regexp">/.$/</span>(!!&#123;&#125;)]],/./(<span class="regexp">/..$/</span>(~_loc4_ &gt;&gt;&gt; _loc4_)));</span><br><span class="line">    param3[<span class="regexp">/..$/</span>(___)] = param3[<span class="regexp">/./</span>(param3[param3])](param3[<span class="regexp">/..$/</span>(param3[<span class="regexp">/./</span>(param3[param3])])]);</span><br><span class="line">    param3[~~_loc4_] = param3[<span class="regexp">/.$/</span>(<span class="regexp">/../</span>(!&#123;&#125;))](param3[~_loc4_],param3[~_loc4_]);</span><br><span class="line">    param3[<span class="regexp">/ ./</span>(&#123;&#125;)] = param3[<span class="regexp">/./</span>(<span class="regexp">/.....$/</span>(param3))](param3[<span class="regexp">/./</span>(&#123;&#125;)](param3[<span class="regexp">/ ./</span>((~~_loc4_)[param3[_loc4_]])] * (param3[~_loc4_] &lt;&lt; param3[~_loc4_] &lt;&lt; param3[~_loc4_])),param3[<span class="regexp">/.$/</span>(<span class="regexp">/..../</span>(<span class="string">""</span>[param3[_loc4_]]))](param3[~~_loc4_] | param3[~_loc4_],~_loc4_),/./(<span class="string">"."</span>),/./(<span class="regexp">/. /</span>([][param3[_loc4_]][param3[_loc4_]])),param3[<span class="regexp">/..$/</span>(param3[<span class="regexp">/./</span>(param3[param3])])],/./(!&#123;&#125;));</span><br><span class="line">    param3[&#123;&#125;] = param3[<span class="regexp">/.$/</span>(<span class="regexp">/ .../</span>(&#123;&#125;))](param3[<span class="regexp">/..$/</span>(___)],/.$/(<span class="regexp">/../</span>(!!&#123;&#125;)),/./(<span class="regexp">/... /</span>(___)),/./(!!&#123;&#125;),/.$/(!&#123;&#125;),/.$/(<span class="regexp">/ ./</span>(param2[param3[_loc4_]])),/./(<span class="regexp">/..$/</span>([][param3[_loc4_]])),/./(!!&#123;&#125;),/.$/(!&#123;&#125;),/./(<span class="regexp">/. /</span>([][param3[_loc4_]])));</span><br><span class="line">    param3[<span class="regexp">/.$/</span>(___)] = param3[~_loc4_] &lt;&lt; (param3[<span class="regexp">/.$/</span>(<span class="regexp">/../</span>(!&#123;&#125;))](<span class="string">"."</span>[param3[_loc4_]](!&#123;&#125;)[param3[<span class="regexp">/.$/</span>(!!&#123;&#125;)]],param3[<span class="regexp">/./</span>(!!&#123;&#125;)](~_loc4_,<span class="string">"_"</span>[param3[_loc4_]](!!&#123;&#125;)[param3[<span class="regexp">/.$/</span>(!!&#123;&#125;)]])) | param3[~~_loc4_] | param3[~_loc4_] &lt;&lt; param3[~~_loc4_]);</span><br><span class="line">    param3[<span class="regexp">/./</span>(<span class="regexp">/..$/</span>(___))] = param3[~~~_loc4_] &lt;&lt; (param3[~_loc4_] | param3[param3[<span class="regexp">/.$/</span>(<span class="regexp">/../</span>(!&#123;&#125;))](~_loc4_,param3[<span class="regexp">/./</span>(!!&#123;&#125;)](~_loc4_,~_loc4_))]);</span><br><span class="line">    param3[<span class="regexp">/ ./</span>([][param3[_loc4_]])] = param3[<span class="regexp">/./</span>(<span class="regexp">/..$/</span>(!&#123;&#125;))](param1[param3[<span class="regexp">/.$/</span>(!!&#123;&#125;)]],param3[<span class="regexp">/.$/</span>(param3[<span class="regexp">/.$/</span>(<span class="regexp">/../</span>(!&#123;&#125;))])]);</span><br><span class="line">    param3[<span class="regexp">/ ./</span>([][param3[_loc4_]][param3[_loc4_]])] = param3[<span class="regexp">/.$/</span>([][&#123;&#125;])](param3[<span class="regexp">/ ./</span>([<span class="string">""</span>][param3[_loc4_]])],param3[<span class="regexp">/./</span>(<span class="regexp">/..$/</span>(param3[<span class="regexp">/./</span>(<span class="regexp">/..$/</span>(!&#123;&#125;))]))]);</span><br><span class="line">    param3[<span class="regexp">/./</span>([][&#123;&#125;])] = param3[<span class="regexp">/.$/</span>(___)];</span><br><span class="line">    param3[<span class="regexp">/.$/</span>[param3[_loc4_]]] = <span class="regexp">/./</span>(<span class="regexp">/....$/</span>(!&#123;&#125;));</span><br><span class="line">    param3[<span class="regexp">/../</span>((!&#123;&#125;)[param3[_loc4_]])] = <span class="regexp">/./</span>(!!&#123;&#125;);</span><br><span class="line">    param2[param3[param3]](param1,~~_loc4_,param3[<span class="regexp">/./</span>([][&#123;&#125;])]);</span><br><span class="line">    param2[param3[param3]](param1,param3[<span class="regexp">/./</span>(<span class="regexp">/..$/</span>(!!&#123;&#125;))],param3[<span class="regexp">/ ./</span>([][param3[_loc4_]][param3[_loc4_]])]);</span><br><span class="line">    param2[param3[param3]](param1,param3[param3[<span class="regexp">/_/</span>[param3[_loc4_]]]](param3[<span class="regexp">/./</span>(<span class="regexp">/..$/</span>(!!&#123;&#125;))],param3[param3[<span class="regexp">/../</span>([][param3[_loc4_]])]](param3[<span class="regexp">/ ./</span>([][param3[_loc4_]][param3[_loc4_]])],param3[~_loc4_] &lt;&lt; param3[~~_loc4_] | param3[~~_loc4_] | param3[~_loc4_])),param3[<span class="regexp">/ ./</span>(&#123;&#125;[param3[_loc4_]][param3[_loc4_]])]);</span><br><span class="line">    param2[param3[param3]](param1,param3[param3[<span class="regexp">/../</span>[param3[_loc4_]]]](param3[<span class="regexp">/./</span>([][&#123;&#125;])],param3[param3[<span class="regexp">/../</span>(<span class="string">""</span>[param3[_loc4_]])]](param3[<span class="regexp">/ ./</span>([][param3[_loc4_]][param3[_loc4_]])],param3[~~_loc4_])),param3[<span class="regexp">/ ./</span>(&#123;&#125;[param3[_loc4_]][param3[_loc4_]])]);</span><br><span class="line">    param3[<span class="regexp">/..$/</span>(<span class="regexp">/./</span>([]))] = param3[<span class="regexp">/.$/</span>(<span class="regexp">/..../</span>(param3))](<span class="regexp">/.$/</span>(<span class="regexp">/.../</span>(<span class="string">""</span>[param3[_loc4_]])),/.$/(<span class="regexp">/../</span>(&#123;&#125;)),/.$/(<span class="regexp">/../</span>(!&#123;&#125;)),/.$/(<span class="regexp">/.../</span>([][&#123;&#125;])),/.$/(!!&#123;&#125;),/.$/(<span class="regexp">/ ../</span>([][param3[_loc4_]])),param3[<span class="regexp">/./</span>(&#123;&#125;)](param3[param3[<span class="regexp">/./</span>[param3[_loc4_]]]](param3[param3[<span class="regexp">/../</span>(<span class="regexp">/./</span>[param3[_loc4_]])]](param3[<span class="regexp">/ ./</span>((~~_loc4_)[param3[_loc4_]])],<span class="string">""</span>[param3[_loc4_]](!!&#123;&#125;)[param3[<span class="regexp">/.$/</span>(!!&#123;&#125;)]]),<span class="string">""</span>[param3[_loc4_]](!&#123;&#125;)[param3[<span class="regexp">/.$/</span>(!!&#123;&#125;)]])),/./(<span class="regexp">/./</span>([])),/./(!&#123;&#125;),/.$/(<span class="regexp">/../</span>(&#123;&#125;)));</span><br><span class="line">    _loc4_[param3[<span class="regexp">/..$/</span>(<span class="regexp">/_/</span>([]))]][param3[<span class="regexp">/.$/</span>(<span class="regexp">/..../</span>(&#123;&#125;))](<span class="regexp">/./</span>([][&#123;&#125;]),/./(<span class="regexp">/....$/</span>([][param3[_loc4_]])),/./(<span class="regexp">/...$/</span>(!&#123;&#125;)))][param3[<span class="regexp">/.$/</span>(<span class="regexp">/..../</span>(&#123;&#125;))](<span class="regexp">/..$/</span>(!&#123;&#125;),/.$/(<span class="regexp">/../</span>(!&#123;&#125;)),/.$/(<span class="regexp">/../</span>(!!&#123;&#125;)),/.$/(<span class="regexp">/../</span>([][param3[_loc4_]])),param3[<span class="regexp">/../</span>([][&#123;&#125;])])](param3[<span class="regexp">/ ./</span>(param3)]) &gt; <span class="number">0</span>?param2[param3[param3]](param1,param3[param3[<span class="regexp">/./</span>[param3[_loc4_]]]](param3[<span class="regexp">/./</span>([][&#123;&#125;])],param3[param3[<span class="regexp">/../</span>(<span class="string">""</span>[param3[_loc4_]])]](param3[<span class="regexp">/ ./</span>(&#123;&#125;[param3[_loc4_]][param3[_loc4_]])],param3[~~_loc4_] &lt;&lt; param3[~_loc4_] | param3[~_loc4_])),param3[<span class="regexp">/ ./</span>(&#123;&#125;[param3[_loc4_]][param3[_loc4_]])]):param2[param3[param3]](param1,param3[param3[<span class="regexp">/|/</span>[param3[_loc4_]]]](<span class="number">0</span>,param3[param3[<span class="regexp">/../</span>((~_loc4_)[param3[_loc4_]])]](param3[<span class="regexp">/ ./</span>([][param3[_loc4_]][param3[_loc4_]])],param3[<span class="string">""</span>[param3[<span class="regexp">/.$/</span>(!!&#123;&#125;)]]] &lt;&lt; param3[~_loc4_] | param3[~_loc4_])),param3[<span class="regexp">/ ./</span>([][param3[_loc4_]][param3[_loc4_]])]);</span><br><span class="line">    param2[param3[param3]](param1,param3[param3[<span class="regexp">/$/</span>[param3[_loc4_]]]](param3[<span class="regexp">/./</span>([][&#123;&#125;])],param3[param3[<span class="regexp">/../</span>([][param3[_loc4_]])]](param3[<span class="regexp">/ ./</span>([][param3[_loc4_]][param3[_loc4_]])],param3[<span class="regexp">/./</span>(<span class="regexp">/..$/</span>(___))] &gt;&gt; param3[~_loc4_])),param3[<span class="regexp">/ ./</span>(<span class="string">""</span>[param3[_loc4_]][param3[_loc4_]])]);</span><br><span class="line">    param2[param3[param3]](param1,param3[param3[<span class="regexp">/$/</span>[param3[_loc4_]]]](param3[<span class="regexp">/./</span>(<span class="regexp">/..$/</span>(!!&#123;&#125;))],param3[param3[<span class="regexp">/../</span>([][param3[_loc4_]])]](param3[<span class="regexp">/ ./</span>(<span class="string">""</span>[param3[_loc4_]][param3[_loc4_]])],param3[~_loc4_] | param3[~~_loc4_])),param3[<span class="regexp">/ ./</span>(&#123;&#125;[param3[_loc4_]][param3[_loc4_]])]);</span><br><span class="line">    param2[param3[param3]](param1,param3[param3[<span class="regexp">/..$/</span>[param3[_loc4_]]]](param3[<span class="regexp">/.$/</span>(<span class="regexp">/ ../</span>((~_loc4_)[param3[_loc4_]]))],param3[param3[<span class="regexp">/../</span>((~_loc4_)[param3[_loc4_]])]](param3[<span class="regexp">/ ./</span>(<span class="string">"."</span>[param3[_loc4_]][param3[_loc4_]])],param3[<span class="regexp">/.$/</span>(<span class="regexp">/ ../</span>((~_loc4_)[param3[_loc4_]]))] &gt;&gt; (param3[~_loc4_] &lt;&lt; param3[~~_loc4_] | param3[~_loc4_]) | param3[~~_loc4_])),param3[<span class="regexp">/ ./</span>(<span class="string">"|"</span>[param3[_loc4_]][param3[_loc4_]])]);</span><br><span class="line">    param2[param3[param3]](param1,param3[param3[<span class="regexp">/__/</span>[param3[_loc4_]]]](param3[<span class="regexp">/./</span>([][&#123;&#125;])],param3[param3[<span class="regexp">/../</span>(<span class="string">""</span>[param3[_loc4_]])]](param3[<span class="regexp">/ ./</span>(<span class="string">"."</span>[param3[_loc4_]][param3[_loc4_]])],param3[~_loc4_])),param3[<span class="regexp">/ ./</span>(&#123;&#125;[param3[_loc4_]][param3[_loc4_]])]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不管你们看了上面的代码有什么感受，反正我是“What the fuck”。经过混淆以后这段代码恶心的一逼，<code>param3</code>是之前认为是key，却出现了很多对<code>param3</code>的操作，还是先看看<code>_createKey()</code>的逻辑吧：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">private <span class="function"><span class="keyword">function</span> <span class="title">_createKey</span>(<span class="params"></span>) : <span class="title">Object</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> key:<span class="built_in">Object</span> = &#123;&#125;;</span><br><span class="line">    key.a = <span class="function"><span class="keyword">function</span>(<span class="params">param1:int, param2:int</span>):<span class="title">int</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> param1 + param2;</span><br><span class="line">    &#125;;</span><br><span class="line">    key.s = <span class="function"><span class="keyword">function</span>(<span class="params">param1:int, param2:int</span>):<span class="title">int</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> param1 - param2;</span><br><span class="line">    &#125;;</span><br><span class="line">    key.t = <span class="function"><span class="keyword">function</span>(<span class="params">param1:int, param2:int</span>):<span class="title">int</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> param1 * param2;</span><br><span class="line">    &#125;;</span><br><span class="line">    key.d = <span class="function"><span class="keyword">function</span>(<span class="params">param1:int, param2:int</span>):<span class="title">int</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> param1 / param2;</span><br><span class="line">    &#125;;</span><br><span class="line">    key.m = <span class="function"><span class="keyword">function</span>(<span class="params">param1:int, param2:int</span>):<span class="title">int</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> param1 % param2;</span><br><span class="line">    &#125;;</span><br><span class="line">    key.f = <span class="function"><span class="keyword">function</span>(<span class="params">param1:Number</span>):<span class="title">int</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.floor(param1);</span><br><span class="line">    &#125;;</span><br><span class="line">    key.r = <span class="function"><span class="keyword">function</span>(<span class="params"></span>):<span class="title">int</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.random();</span><br><span class="line">    &#125;;</span><br><span class="line">    key.j = <span class="function"><span class="keyword">function</span>(<span class="params">... rest</span>):<span class="title">String</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> rest.join(<span class="string">""</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">    key.n = <span class="function"><span class="keyword">function</span>(<span class="params"></span>):<span class="title">Number</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Date</span>().getTime();</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> key;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以其实这个<code>_createKey()</code>是生成了一个对象，对象中封装了一些加、减、乘、除、模、随机、字符串链接等方法。</p>
+<p>解密算法既然看不懂就不看了，绕过吧，直接输出解密后的<code>Core.swf</code>吧。</p>
+<p>本来想用FFDec的修改功能直接改，然而FFDec毕竟图样，一改就出错……还是用搞个Flash吧……</p>
+<p>下了一个Flash CS6，使用FFDec把mainD2.swf反编译成fla文件，使用Flash CS6打开，随便改点代码，调试一下……呃，不行，说什么“不能访问本地资源”，好像是传说中的AS3以后的安全沙箱机制。</p>
+<p>网上找了一下，有个简单的办法，就是在<code>C:\Windows\System32\Macromed\Flash\FlashPlayerTrust</code>目录下随便创建一个文本文件，写上可以受到信任的路径。这回不报沙箱错误了，打开后无限小黑船。</p>
+<p>接着把</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(loaderInfo.loaderURL.match(<span class="regexp">/^file:/</span>) == <span class="literal">null</span>)</span><br><span class="line">&#123;</span><br><span class="line">    ___(_loc4_,_loc3_,_loc6_);</span><br><span class="line">    _core.loadBytes(_loc3_,_loc5_);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    _core.loadBytes(_loc4_,_loc5_);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>替换成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">___(_loc4_,_loc3_,_loc6_);</span><br><span class="line"><span class="keyword">var</span> fs:FileReference = <span class="keyword">new</span> FileReference();</span><br><span class="line">fs.save(_loc3_, <span class="string">"Core2.swf"</span>);</span><br><span class="line">_core.loadBytes(_loc3_,_loc5_);</span><br></pre></td></tr></table></figure>
+<p>执行，弹出一个对话框，保存，反编译……想得美，还是打不开。</p>
+<p>还是接着看代码吧，刚才提到，<code>_core</code>加载完成以后会回调<code>_handleLoadComplete2()</code>，那么就在<code>_handleLoadComplete2()</code>做点手脚吧，于是给<code>_handleLoadComplete2()</code>第一行下个断点，然而调试一下却发现这个断点根本不触发……</p>
+<p>查了一下AS3的文档，了解到<a href="http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/LoaderInfo.html" target="_blank" rel="noopener">LoaderInfo</a>有个bytes属性，里面装的就是要加载的内容；还有7个事件，其中<code>_handleLoadComplete</code>中监听了<code>complete</code>和<code>ioError</code>，两个在调试时都没有触发，于是我监听了所有的事件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">_core.contentLoaderInfo.addEventListener(<span class="string">"complete"</span>,_handleLoadComplete2);</span><br><span class="line">_core.contentLoaderInfo.addEventListener(<span class="string">"httpStatus"</span>,_handleLoadHttpStatus);</span><br><span class="line">_core.contentLoaderInfo.addEventListener(<span class="string">"init"</span>,_handleLoadInit);</span><br><span class="line">_core.contentLoaderInfo.addEventListener(<span class="string">"ioError"</span>,_handleLoadError);</span><br><span class="line">_core.contentLoaderInfo.addEventListener(<span class="string">"open"</span>,_handleLoadOpen);</span><br><span class="line">_core.contentLoaderInfo.addEventListener(<span class="string">"progress"</span>,_handleLoadProgress);</span><br></pre></td></tr></table></figure>
+<p>新增的5个回调函数都只输出事件名称并加上了断点。</p>
+<p>调试后发现只有<code>_handleLoadProgress</code>触发了两次，一次是开始时，一次是加载完成，估计如果文件比较大，会触发很多次的。</p>
+<p>那就在最后一次触发<code>_handleLoadProgress</code>时输出bytes吧：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private <span class="function"><span class="keyword">function</span> <span class="title">_handleLoadProgress</span>(<span class="params">_event:Event</span>) : <span class="title">void</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    trace(<span class="string">"progress"</span>);</span><br><span class="line">    <span class="keyword">var</span> progressEvent:ProgressEvent = ProgressEvent(_event);</span><br><span class="line">    <span class="keyword">if</span> (progressEvent.bytesLoaded &gt;= progressEvent.bytesTotal)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> fileRef:FileReference = <span class="keyword">new</span> FileReference();</span><br><span class="line">        <span class="keyword">var</span> loaderInfo:LoaderInfo = LoaderInfo(_event.target);</span><br><span class="line">        fileRef.save(loaderInfo.bytes, <span class="string">"Core3.swf"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>鉴于Core.swf本身肯定也有要加载的东西，在此猜测，也许是Core.swf要加载的资源没加载成功Core.swf内部报错，而这个错误不受到mainD2.swf的控制，最终导致了无限小黑船却不报错。总之尽量模拟一下实际环境吧。</p>
+<p>把输出的<code>mainD2.swf</code>放到岛风Go的缓存目录下替换掉原先的，然后用Flash Player打开，这次不一样了，会进入有进度条的Loading画面，虽然进度条满了以后猫了，不过生成出来的Core3.swf是好使的，在FFDec中打开成功。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Flash/" rel="tag"># Flash</a>
+            
+              <a href="/tags/ActionScript/" rel="tag"># ActionScript</a>
+            
+              <a href="/tags/FFDec/" rel="tag"># FFDec</a>
+            
+              <a href="/tags/Kancolle/" rel="tag"># Kancolle</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2014/03/21/top-book-6/" rel="next" title="编程之道 卷六 管理">
+                  <i class="fa fa-chevron-left"></i> 编程之道 卷六 管理
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/08/fcgames-moaikun-password/" rel="prev" title="FC游戏背后的秘密（一）：摩艾君的续关密码">
+                  FC游戏背后的秘密（一）：摩艾君的续关密码 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于舰C的Core-swf文件的解密与反编译"><span class="nav-number">1.</span> <span class="nav-text">关于舰C的Core.swf文件的解密与反编译</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Arathi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+        
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Arathi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
