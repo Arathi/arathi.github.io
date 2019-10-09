@@ -205,7 +205,7 @@ $(29-1)\div4=7$，即$0111_2$，而三组stage值也都是$0111_2$，而且每�
       $(document).ready(function(){
         for (var i=0; i<=13; i++) {
           var startLevel = i*4 + 1
-          var endLevel = i*4 + 3
+          var endLevel = i*4 + 4
           var eleHtml = "<option value='" + startLevel + "'>" + startLevel + '~' + endLevel + "</option>"
           $('#ddlLevels').append(eleHtml)
         }
