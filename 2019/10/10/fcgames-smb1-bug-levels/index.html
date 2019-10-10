@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="关于所谓FC超级马里奥兄弟初代（以下简称SMB1）隐藏关卡的问题，出自当年都市传闻，如果经常看敖厂长视频的应该有所了解，这是事实上存在的：  先玩一会儿SMB1 快速拔掉卡带换成网球玩一会儿 再拔掉卡带把SMB1卡带插回去 按RESET 进入标题后，按START+A开始游戏  就能进入“随机”隐藏关。但这些关卡似乎在“设计”上有很多问题，要么进去就死，要么玩着玩着就卡死，要么就是没有路或者死循环反">
+<meta name="keywords" content="6502,FC&#x2F;NES,逆向工程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FC游戏背后的秘密（二）：超级马里奥兄弟的奇怪关卡">
+<meta property="og:url" content="http://blog.undsf.com/2019/10/10/fcgames-smb1-bug-levels/index.html">
+<meta property="og:site_name" content="Nebnizilla Citadel">
+<meta property="og:description" content="关于所谓FC超级马里奥兄弟初代（以下简称SMB1）隐藏关卡的问题，出自当年都市传闻，如果经常看敖厂长视频的应该有所了解，这是事实上存在的：  先玩一会儿SMB1 快速拔掉卡带换成网球玩一会儿 再拔掉卡带把SMB1卡带插回去 按RESET 进入标题后，按START+A开始游戏  就能进入“随机”隐藏关。但这些关卡似乎在“设计”上有很多问题，要么进去就死，要么玩着玩着就卡死，要么就是没有路或者死循环反">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-10T17:11:22.740Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FC游戏背后的秘密（二）：超级马里奥兄弟的奇怪关卡">
+<meta name="twitter:description" content="关于所谓FC超级马里奥兄弟初代（以下简称SMB1）隐藏关卡的问题，出自当年都市传闻，如果经常看敖厂长视频的应该有所了解，这是事实上存在的：  先玩一会儿SMB1 快速拔掉卡带换成网球玩一会儿 再拔掉卡带把SMB1卡带插回去 按RESET 进入标题后，按START+A开始游戏  就能进入“随机”隐藏关。但这些关卡似乎在“设计”上有很多问题，要么进去就死，要么玩着玩着就卡死，要么就是没有路或者死循环反">
+  <link rel="canonical" href="http://blog.undsf.com/2019/10/10/fcgames-smb1-bug-levels/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>FC游戏背后的秘密（二）：超级马里奥兄弟的奇怪关卡 | Nebnizilla Citadel</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Nebnizilla Citadel</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">奈伯尼吉拉城塞</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://blog.undsf.com/2019/10/10/fcgames-smb1-bug-levels/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Arathi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nebnizilla Citadel">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">FC游戏背后的秘密（二）：超级马里奥兄弟的奇怪关卡
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-11 00:31:00 / 修改时间：01:11:22" itemprop="dateCreated datePublished" datetime="2019-10-11T00:31:00+08:00">2019-10-11</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/FC-NES/" itemprop="url" rel="index"><span itemprop="name">FC/NES</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>关于所谓FC超级马里奥兄弟初代（以下简称SMB1）隐藏关卡的问题，出自当年都市传闻，如果经常看<a href="https://www.bilibili.com/video/av2130792" target="_blank" rel="noopener">敖厂长视频</a>的应该有所了解，这是事实上存在的：</p>
+<ul>
+<li>先玩一会儿SMB1</li>
+<li>快速拔掉卡带换成网球玩一会儿</li>
+<li>再拔掉卡带把SMB1卡带插回去</li>
+<li>按RESET</li>
+<li>进入标题后，按START+A开始游戏</li>
+</ul>
+<p>就能进入“随机”隐藏关。但这些关卡似乎在“设计”上有很多问题，要么进去就死，要么玩着玩着就卡死，要么就是没有路或者死循环反正不能过关，再要么就是过关后卡死或者回到标题。</p>
+<a id="more"></a>
+<p>FC吧主<a href="https://space.bilibili.com/642169" target="_blank" rel="noopener">金属狂人</a>对此也<a href="https://www.bilibili.com/video/av68733622" target="_blank" rel="noopener">做过验证</a>，用了不同版本的主机和游戏，该问题<em>基本上</em>能复现，除了以下两种情况：</p>
+<ol>
+<li>美版NES由于锁区问题换卡时相当于按Power重启</li>
+<li>使用欧版《SMB1+打鸭子》合卡时无法进入</li>
+</ol>
+<p>在这里先说结论：隐藏关在设计上并不存在。任天堂在SMB1中没有从来没设计过这些隐藏关，而是由于程序bug设置了错误的关卡ID，因此引用错误的数据去创建场景。这些关卡应该叫“bug关卡”。于是我产生了以下疑问：</p>
+<ol>
+<li>“bug关卡”触发的原理是什么？</li>
+<li>为什么欧版合卡无法进入“bug关卡”？</li>
+<li>既然复现步骤这么复杂，那怎样在（无法热拔插卡带的）模拟器上玩到这些“bug关卡”？</li>
+</ol>
+<h3 id="初期探索"><a href="#初期探索" class="headerlink" title="初期探索"></a>初期探索</h3><p>首先是使用模拟器的RAM Search功能（当然，也可以翻翻金手指大全什么的），找到了SMB1存放关卡ID的内存：</p>
+<p>当前玩家<br>大关 $075F<br>小关 $0760</p>
+<p>另一个玩家<br>大关 $0766<br>小关 $0767</p>
+<p>标题界面将<code>$075F</code>设置为<code>#$00~#$07</code>代表正常的World 1到World 8，超过这个范围就是开局进入9-1、A-1……Z-1或者各种奇怪的符号-1什么的bug关卡。</p>
+<p>不过之后在用<code>$075F</code>写入作为断点调试网球的时候，发现这个地址从头到尾都没有动过。既然网球不会操作这个地址，那就存在其他网球用过的地址和SMB1的重合，并在后续RESET时没有被清理，最终传入了<code>$075F</code>。为了验证这个想法，还需要看看RESET及内存初始化相关的代码。</p>
+<h3 id="关于内存初始化"><a href="#关于内存初始化" class="headerlink" title="关于内存初始化"></a>关于内存初始化</h3><p>首先跟踪初始化后$075F的变化，先设置$075F写入为断点，然后RESET：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">; 初始化</span><br><span class="line">90CC: LDX #$07</span><br><span class="line">90CE: LDA #$00</span><br><span class="line">90D0: STA $06</span><br><span class="line">; 外循环X开始</span><br><span class="line">90D2: STX $07</span><br><span class="line">; 内循环Y开始，Y是外面传进来的</span><br><span class="line">90D4: CPX #$01</span><br><span class="line">90D6: BNE $90DC</span><br><span class="line">90D8: CPY #$60</span><br><span class="line">90DA: BCS $90DE ; 跳过$01FF~$0160</span><br><span class="line">; 设置为0x00</span><br><span class="line">90DC: STA ($06),Y</span><br><span class="line">90DE: DEY</span><br><span class="line">90DF: CPY #$FF</span><br><span class="line">90E1: BNE $90D4 ; 内循环结束</span><br><span class="line">90E3: DEX</span><br><span class="line">90E4: BPL $90D2 ; 外循环结束</span><br><span class="line">90E6: RTS</span><br></pre></td></tr></table></figure>
+<p>这段程序会被多次调用，第一次执行时，栈里只有两个字节，<code>2D,80</code>，很明显就是$802B附近调用（JSR）了这段程序，SMB1的RESET向量是$8000：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">8000: SEI</span><br><span class="line">8001: CLD</span><br><span class="line">8002: LDA #$10</span><br><span class="line">8004: STA PPU_CTRL</span><br><span class="line">8007: LDX #$FF</span><br><span class="line">8009: TXS</span><br><span class="line">800A: LDA PPU_STATUS</span><br><span class="line">800D: BPL $800A</span><br><span class="line">800F: LDA PPU_STATUS</span><br><span class="line">8012: BPL $800F</span><br><span class="line">8014: LDY #$FE</span><br><span class="line">8016: LDX #$05</span><br><span class="line">8018: LDA $07D7,X</span><br><span class="line">801B: CMP #$0A</span><br><span class="line">801D: BCS $802B</span><br><span class="line">801F: DEX</span><br><span class="line">8020: BPL $8018</span><br><span class="line">8022: LDA $07FF</span><br><span class="line">8025: CMP #$A5</span><br><span class="line">8027: BNE $802B</span><br><span class="line">8029: LDY #$D6</span><br><span class="line">802B: JSR $90CC</span><br></pre></td></tr></table></figure>
+<p>第二次执行时，栈顶指针是<code>$8FD3</code>，说明在$8FD1处调用的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">8FCF: LDY #$6F</span><br><span class="line">8FD1: JSR $90CC</span><br></pre></td></tr></table></figure>
+<p>同理，第三次调用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">8FE4: LDY #$4B</span><br><span class="line">8FE6: JSR $90CC</span><br></pre></td></tr></table></figure></p>
+<p>由此可见，三次初始化中范围最大的一次是<code>$0000~$07D6</code>（排除<code>$0160~$01FF</code>），后面越来越小。</p>
+<h3 id="特殊入口"><a href="#特殊入口" class="headerlink" title="特殊入口"></a>特殊入口</h3><p>进入标题后，<strong>直接按START开始游戏</strong>，并不会触发写入$075F的断点，但是注意，bug复现步骤中明确提到，要<strong>按START+A开始游戏</strong>，看来游戏对有没有按下A键有不一样的处理。RESET后回到标题画面启用断点，START+A，果然，程序停在了<code>$830E</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">82E0: LDA $07FD</span><br><span class="line">82E3: JSR $830E</span><br><span class="line">...</span><br><span class="line">830E: STA $075F ; 此时栈顶指针是指向了$82E5</span><br><span class="line">8311: STA $0766</span><br><span class="line">8314: LDX #$00</span><br><span class="line">8316: STX $0760</span><br><span class="line">8319: STX $0767</span><br><span class="line">831C: RTS</span><br></pre></td></tr></table></figure>
+<p>至此，一个新的内存地址<code>$07FD</code>出现在了我们眼前。<br>按下START+A时，会先从<code>$07FD</code>取出数据，然后设置到<code>$075F</code>和<code>$0766</code>，完成World的初始化。<code>$07FD</code>怎么来的暂时不重要，重要的是，刚才发现不管你怎么捅RESET，只要不断电重启机器，三次初始化都不会对<code>$07FD</code>这个值造成影响。那么，只要能在游戏过程中写入<code>$07FD</code>这个地址，任意一个游戏都能替代网球，成为触发bug的扳机。</p>
+<h3 id="为什么欧版合卡无法触发bug"><a href="#为什么欧版合卡无法触发bug" class="headerlink" title="为什么欧版合卡无法触发bug"></a>为什么欧版合卡无法触发bug</h3><p>吧主大人的解释是欧版合卡的基板与网球不大一致，不兼容，导致无法触发。这样的说法显然不能让我满意，最合理的解释当然就是合卡可能在RESET时对<code>$07FD</code>进行了初始化。要验证这个猜想，只要下个断点就知道了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">80EF: LDA #$00</span><br><span class="line">80F1: LDX #$00</span><br><span class="line">80F3: STA $00,X</span><br><span class="line">80F5: STA $0400,X</span><br><span class="line">80F8: STA $0500,X</span><br><span class="line">80FB: STA $0600,X</span><br><span class="line">80FE: STA $0700,X ; 在此中断</span><br><span class="line">8101: INX</span><br><span class="line">8102: BNE $80F3</span><br><span class="line">8104: LDX #$00</span><br><span class="line">8106: LDA #$F8</span><br><span class="line">8108: STA $0200,X @ $02FD = #$F8</span><br><span class="line">810B: INX</span><br><span class="line">810C: BNE $8108</span><br><span class="line">810E: RTS</span><br></pre></td></tr></table></figure>
+<p>很明显了，合卡RESET时，会对<code>$00~$FF</code>、<code>$0400~$07FF</code>进行初始化，其中当然包括<code>$07FD</code>，所以插上这张合卡，按下RESET，续关记录就没了，所以无法触发bug。</p>
+<h3 id="关于模拟器选关"><a href="#关于模拟器选关" class="headerlink" title="关于模拟器选关"></a>关于模拟器选关</h3><p>实际上<a href="https://archive.org/download/GoodNES3.14_201809/GoodNES3.14.rar" target="_blank" rel="noopener">GoodNES</a>中收录了各种改版的SMB1，数量不小，有951个，其中就有一些开局进入bug关卡的沙雕hack版。“俄国喷神”Kiraman在一期视频<a href="https://www.bilibili.com/video/av51604412?t=1319" target="_blank" rel="noopener">《Dendy编年史#1：超级马里奥》</a>中就带我们玩了一下一盘1994年国产的9999合1卡带（GoodNES中也有收录），上面有不同关卡开局的SMB1，根据前文的结论，其实就是将<code>$07FD</code>设为不同值然后引导进入游戏。</p>
+<p>不用Hack版也可以用金手指锁定<code>$07FD</code>的方式，或者用Hex Editor手动改一下<code>$07FD</code>，只要掌握了原理，方法就多种多样，随意选择。</p>
+<h3 id="关于ROM修改"><a href="#关于ROM修改" class="headerlink" title="关于ROM修改"></a>关于ROM修改</h3><p>SMB1对于ROM的利用率非常高，放眼望去几乎没有几处连续的00或者FF，即使有也就几个字节，完全不够修改，查阅了国外大佬提供的一篇<a href="https://www.romhacking.net/documents/345/" target="_blank" rel="noopener">关于SMB1内存映射相关文档</a>，上面也表示几乎没有连续的未使用。因此要改程序的话，要么扩容（比如刚才那个SMB1+打鸭子），要么加到trainer中，反正都是在模拟器上运行，就放在trainer中吧。</p>
+<p>有机会的话，再做个标题界面按上下键选关玩玩吧。</p>
+<h3 id="附录：关于-07FD的原本用途"><a href="#附录：关于-07FD的原本用途" class="headerlink" title="附录：关于$07FD的原本用途"></a>附录：关于<code>$07FD</code>的原本用途</h3><p>在随后的测试中，发现只会在GAME OVER以后写入<code>$07FD</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">9237: LDA #$00</span><br><span class="line">9239: STA $0774</span><br><span class="line">923C: LDA $06FC</span><br><span class="line">923F: AND #$10</span><br><span class="line">9241: BNE $9248</span><br><span class="line">9243: LDA $07A0</span><br><span class="line">9246: BNE $9281</span><br><span class="line">9248: LDA #$80</span><br><span class="line">924A: STA $FC</span><br><span class="line">924C: JSR $9282</span><br><span class="line">924F: BCC $9264</span><br><span class="line">9251: LDA $075F</span><br><span class="line">9254: STA $07FD</span><br><span class="line">9257: LDA #$00</span><br><span class="line">9259: ASL</span><br><span class="line">925A: STA $0772</span><br><span class="line">925D: STA $07A0</span><br><span class="line">9260: STA $0770</span><br><span class="line">9263: RTS</span><br></pre></td></tr></table></figure>
+<p>回到标题画面以后，按START+A就能续关，如果不小心按了START也没关系，只要不GAME OVER，按下RESET还是能续关，我猜测不清理<code>$07FD</code>以及START+A组合键的原本作用也许就是开发人员用来测试的。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/6502/" rel="tag"># 6502</a>
+            
+              <a href="/tags/FC-NES/" rel="tag"># FC/NES</a>
+            
+              <a href="/tags/逆向工程/" rel="tag"># 逆向工程</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/08/fcgames-moaikun-password/" rel="next" title="FC游戏背后的秘密（一）：摩艾君的续关密码">
+                  <i class="fa fa-chevron-left"></i> FC游戏背后的秘密（一）：摩艾君的续关密码
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#初期探索"><span class="nav-number">1.</span> <span class="nav-text">初期探索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于内存初始化"><span class="nav-number">2.</span> <span class="nav-text">关于内存初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特殊入口"><span class="nav-number">3.</span> <span class="nav-text">特殊入口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么欧版合卡无法触发bug"><span class="nav-number">4.</span> <span class="nav-text">为什么欧版合卡无法触发bug</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于模拟器选关"><span class="nav-number">5.</span> <span class="nav-text">关于模拟器选关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于ROM修改"><span class="nav-number">6.</span> <span class="nav-text">关于ROM修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附录：关于-07FD的原本用途"><span class="nav-number">7.</span> <span class="nav-text">附录：关于$07FD的原本用途</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Arathi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span>
+        
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Arathi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
